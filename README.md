@@ -21,8 +21,8 @@ cd input_data
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg03.hiseq.k31.pe.yak && \
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg04.hiseq.k31.pe.yak && \
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/GIAB_HG002_GRCh38_1_22_v4.2.1_phased.vcf && \
-# there is probably a better place to download this assembly
-wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg38.latest.fa.gz && \
+# check into adding the medically relevant genes vcf
+wget https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/references/GRCh38/GCA_000001405.15_GRCh38_no_alt_analysis_set_maskedGRC_exclusions_v2.fasta.gz && \
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/inputs.json
 cd ../
 ```
