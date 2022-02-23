@@ -18,7 +18,7 @@ git clone https://github.com/meredith705/wdl_workflows.git
 ```
 
 # WDL Input Files
-Download the yak parental count files, phased GIAB hg002 v hg38 truthset vcf, hg38 assembly, and wdl inputs.json. These are downloaded outside of the WDL because they are used over and over for each WDL execution. 
+Download the yak parental count files, phased GIAB_hg002_v_hg38_truthset.vcf, and hg38 assembly. These are downloaded outside of the WDL and are re-used in each WDL execution. 
 The files and paths in inputs.json can be updated as needed. The inputs.json file assumes the input data is a subdirectory of the shasta_eval working directory where the wdl will be executed.
 ```
 cd shasta_eval
