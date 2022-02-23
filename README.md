@@ -2,7 +2,7 @@
 
 Some wdl workflows adapted to run GFAse, yak, dipcall, and whatshap on shasta assemblies
 
-To install cromwell tools to run wdl worflows locally:
+Install cromwell tools to run wdl worflows locally:
 ```
 cd bin
 wget https://github.com/broadinstitute/cromwell/releases/download/71/cromwell-71.jar
