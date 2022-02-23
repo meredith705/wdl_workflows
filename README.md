@@ -1,19 +1,25 @@
-# wdl_workflows
+# Shasta Evaluation WDL Workflows
 
 WDL workflows that automates runing GFAse, yak, dipcall, and whatshap on a shasta assembly small bubble gfa. 
 
+# WDL Dependancies
 Install cromwell tools to run wdl worflows locally:
 ```
 cd bin
 wget https://github.com/broadinstitute/cromwell/releases/download/71/cromwell-71.jar
 wget https://github.com/broadinstitute/cromwell/releases/download/71/womtool-71.jar
 ```
+TODO: add jdk install information
+
+# Installation
 Clone this git repo to obtain the wdl workflows:
 ```
 git clone https://github.com/meredith705/wdl_workflows.git
 ```
+
+# WDL Input Files
 Download the yak parental count files, phased GIAB hg002 v hg38 truthset vcf, hg38 assembly, and wdl inputs.json. These are downloaded outside of the WDL because they are used over and over for each WDL execution. 
-The inputs.json can be chaned as needed it is set up so that the input data is a subdirectory of the working directory where the wdl will be executed.
+The files and paths in inputs.json can be updated as needed. The inputs.json file assumes the input data is a subdirectory of the shasta_eval working directory where the wdl will be executed.
 ```
 cd shasta_eval
 mkdir input_data
@@ -26,9 +32,11 @@ wget https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/references
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/inputs.json
 cd ../
 ```
-
+# Usage
 Run the wdl workflow:
 ```
 java -jar bin/cromwell-71.jar run -i inputs.json gfase_yak_dipcall_whatshap.wdl
 ```
 
+# Output
+wdl output is found in `cromwell-executions`
