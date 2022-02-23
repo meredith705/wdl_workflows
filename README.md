@@ -1,6 +1,6 @@
 # Shasta Evaluation WDL Workflows
 
-WDL workflows that automates runing GFAse, yak, dipcall, and whatshap on a shasta assembly small bubble gfa. 
+WDL workflows that automates runing GFAse, yak, dipcall, and whatshap on shasta assembly small bubble gfa files. 
 
 # WDL Dependancies
 Install cromwell tools to run wdl worflows locally:
