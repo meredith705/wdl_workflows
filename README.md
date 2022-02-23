@@ -1,6 +1,6 @@
 # wdl_workflows
 
-WDL workflows that automate runing GFAse, yak, dipcall, and whatshap to be used as an switch error evaluation tool for shasta assemblies. 
+WDL workflows that automates runing GFAse, yak, dipcall, and whatshap on a shasta assembly small bubble gfa. 
 
 Install cromwell tools to run wdl worflows locally:
 ```
