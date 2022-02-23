@@ -1,0 +1,12 @@
+{
+  "yakDipcallWhatshap.assemblyDetailed_gfa": "/input_data/Assembly-Detailed.gfa",
+  "yakDipcallWhatshap.dipcall.isMaleSample": "True",
+  "yakDipcallWhatshap.matKmerFasta": "/input_data/hg04.54_61.unique.k31.fa",
+  "yakDipcallWhatshap.gfase.kSize": "31",
+  "yakDipcallWhatshap.patKmerFasta": "/input_data/hg03.48_55.unique.k31.fa",
+  "yakDipcallWhatshap.yakCountFilePat": "/input_data/hg03.ilmn.k31.pe.yak",
+  "yakDipcallWhatshap.yakCountFileMat": "/input_data/hg04.ilmn.k31.pe.yak",
+  "yakDipcallWhatshap.reference": "/input_data/GCA_000001405.15_GRCh38_no_alt_analysis_set_maskedGRC_exclusions_v2.fasta.gz",
+  "yakDipcallWhatshap.truthVcf": "/input_data/GIAB_HG002_GRCh38_1_22_v4.2.1_phased.vcf"
+}
+
