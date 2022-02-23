@@ -3,42 +3,43 @@ version 1.0
 workflow runGFAsePhase {
 	
 	input {
-		File AssemblyDetailed
-        File patKmerFile
-        File matKmerFile
-        String dockerImage = "meredith705/gfase:latest" # parsing error here
-
+		File assemblyDetailed
+		File patKmerFile
+		File matKmerFile
+		Int kmsize = 31
+		String dockerImage = "meredith705/gfase:latest" 
 	}
 
     # phase gfa
     call gfasePhase {
         input:
-            assemblyDetailedGfa = AssemblyDetailed,
+            assemblyDetailedGfa = assemblyDetailed,
             patKmerFa=patKmerFile,
             matKmerFa=matKmerFile,
+            kSize = kmsize,
             dockerImage=dockerImage
     }
 
 	output {
 		#File outputTarball = yakAssemblyStats.outputTarball
 		#File outputSummary = yakAssemblyStats.outputSummary
-        File outputMatAssembly = gfasePhase.matAssembly
-        File outputPatAssembly = gfasePhase.patAssembly
+		File outputMatAssembly = gfasePhase.outMatAssembly
+		File outputPatAssembly = gfasePhase.outPatAssembly
 	}
 
 }
 
 task gfasePhase {
     input {
-        File assemblyDetailedGfa
-        File patKmerFa 
-        File matKmerFa
-        Int kSize = 31
-        # runtime configurations
-        Int memSizeGB = 128
-        Int threadCount = 1
-        Int diskSizeGB = 64
-        String dockerImage = ""meredith705/gfase:latest""
+		File assemblyDetailedGfa
+		File patKmerFa 
+		File matKmerFa
+		Int kSize 
+		# runtime configurations
+		Int memSizeGB = 128
+		Int threadCount = 1
+		Int diskSizeGB = 64
+		String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
@@ -54,13 +55,12 @@ task gfasePhase {
 
         # Phase the gfa
         phase_haplotype_paths \
-        -i {assemblyDetailedGfa} \
-        -p {patKmerFa} \
-        -m {matKmerFa} \
-        -k {kSize}
+        -k ~{kSize} \
+        -i ~{assemblyDetailedGfa} \
+        -p ~{patKmerFa} \
+        -m ~{matKmerFa} 
+        
 
-        # name
-        #PREFIX=$(basename ~{assemblyFastaPat} | sed 's/.gz$//' | sed 's/.fa\(sta\)*$//' | sed 's/[._][pm]at\(ernal\)*//')
 
     >>>
 
@@ -68,12 +68,10 @@ task gfasePhase {
         docker: dockerImage
         memory: memSizeGB + " GB"
         cpu: threadCount
-        disks: "local-disk " + diskSizeGB + " SSD"
-        preemptible: 1
     }
 
     output {
-        File outputMatAssembly = maternal.fasta
-        File outputPatAssembly = paternal.fasta
+        File outMatAssembly = "maternal.fasta"
+        File outPatAssembly = "paternal.fasta"
     }
 }
