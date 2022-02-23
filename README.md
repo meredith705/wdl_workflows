@@ -29,7 +29,6 @@ cd ../
 
 Run the wdl workflow:
 ```
-java -jar bin/cromwell-71.jar run -i inputs.json /public/groups/vg/memeredith/czi/genomics_scripts/wdl/workflows/dipcall_and_whatshap.wdl
-
+java -jar bin/cromwell-71.jar run -i inputs.json gfase.wdl
 ```
 
