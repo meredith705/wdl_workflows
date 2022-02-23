@@ -29,6 +29,6 @@ cd ../
 
 Run the wdl workflow:
 ```
-java -jar bin/cromwell-71.jar run -i inputs.json gfase.wdl
+java -jar bin/cromwell-71.jar run -i inputs.json gfase_yak_dipcall_whatshap.wdl
 ```
 
