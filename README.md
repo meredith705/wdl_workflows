@@ -1,6 +1,6 @@
 # wdl_workflows
 
-Some wdl workflows adapted to run yak, dipcall, and whatshap on shasta assemblies
+Some wdl workflows adapted to run GFAse, yak, dipcall, and whatshap on shasta assemblies
 
 To install cromwell tools to run wdl worflows locally:
 ```
