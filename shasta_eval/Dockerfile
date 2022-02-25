@@ -12,9 +12,11 @@ RUN cd /home/apps && \
 RUN cd /home/apps && \
     git clone https://github.com/rlorigro/GFAse.git && \
     cd GFAse && \
-    cmake . && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
     make -j 8 
-ENV PATH="/home/apps/GFAse:${PATH}"
+ENV PATH="/home/apps/GFAse/build:${PATH}"
 
 RUN mkdir -p /data
 WORKDIR /data
