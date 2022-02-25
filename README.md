@@ -39,4 +39,9 @@ java -jar bin/cromwell-71.jar run -i inputs.json gfase_yak_dipcall_whatshap.wdl
 ```
 
 # Output
-wdl output is found in `cromwell-executions`
+wdl output is found in `cromwell-executions` followed by the apporpriate run number
+```
+maternal.fasta
+paternal.fasta
+unphased.fasta
+```
