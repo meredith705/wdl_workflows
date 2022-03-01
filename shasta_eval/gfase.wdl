@@ -6,7 +6,7 @@ workflow runGFAsePhase {
 		File assemblyDetailed
 		File patKmerFile
 		File matKmerFile
-		Int kmsize = 31
+		Int kmsize 
 		String dockerImage = "meredith705/gfase:latest" 
 	}
 
@@ -21,8 +21,6 @@ workflow runGFAsePhase {
     }
 
 	output {
-		#File outputTarball = yakAssemblyStats.outputTarball
-		#File outputSummary = yakAssemblyStats.outputSummary
 		File outputMatAssembly = gfasePhase.outMatAssembly
 		File outputPatAssembly = gfasePhase.outPatAssembly
 	}
