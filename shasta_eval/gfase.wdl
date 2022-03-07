@@ -57,8 +57,6 @@ task gfasePhase {
         -i ~{assemblyDetailedGfa} \
         -p ~{patKmerFa} \
         -m ~{matKmerFa} 
-        
-
 
     >>>
 
@@ -71,5 +69,6 @@ task gfasePhase {
     output {
         File outMatAssembly = "maternal.fasta"
         File outPatAssembly = "paternal.fasta"
+        File outUnphasedAssembly = "unphased.fasta"
     }
 }
