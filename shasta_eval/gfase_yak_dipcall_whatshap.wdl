@@ -5,12 +5,13 @@ import "whatshap.wdl" as whatshap_t
 import "yak_trioeval.wdl" as yaktrioeval_t
 import "https://raw.githubusercontent.com/human-pangenomics/hpp_production_workflows/f8b09cb7b02729e57b5960665358e081ecfa6af6/QC/wdl/tasks/dipcall.wdl" as dipcall_t
 
-workflow yakDipcallWhatshap {
+workflow GFAseYakDipcallWhatshap {
 
     input {
         File assemblyDetailed_gfa
         File patKmerFasta
         File matKmerFasta
+        Int kmerSize
         File truthVcf
         File reference
         File yakCountFilePat
@@ -22,7 +23,8 @@ workflow yakDipcallWhatshap {
         input:
             assemblyDetailedGfa=assemblyDetailed_gfa,
             patKmerFa=patKmerFasta,
-            matKmerFa=matKmerFasta
+            matKmerFa=matKmerFasta,
+            kSize = kmerSize
     }
 
     call yaktrioeval_t.yakAssemblyStats {
