@@ -52,6 +52,7 @@ java -jar bin/cromwell-71.jar run -i inputs.json gfase_yak_dipcall_whatshap.wdl
 wdl output is found in `cromwell-executions` followed by the apporpriate run id (###)
 
 For now look at the yak and dipcall/whatshap output individually:
+note: this output is for the chr11 assembly Paolo posted to the shasta channel
 ```
 # yak summary
 cat cromwell-executions/GFAseYakDipcallWhatshap/###/call-yakAssemblyStats/execution/paternal.summary.txt 
