@@ -56,7 +56,7 @@ cat cromwell-executions/GFAseYakDipcallWhatshap/###/call-makeSummaryStatFile/exe
 ```
 
 To look at yak and dipcall/whatshap output individually:
-note: this output is for the chr11 assembly Paolo posted to the shasta channel
+note: this output is for the shasta chr11 assembly (run 15)
 ```
 # yak summary
 cat cromwell-executions/GFAseYakDipcallWhatshap/###/call-yakAssemblyStats/execution/paternal.summary.txt 
