@@ -36,7 +36,7 @@ cd ../
 # Usage
 Edit the `inputs.json` file:
 1) specify the path to your shasta assembly file: `Assembly-Detailed.gfa`
-2) Name the 'assemblyRunID' as you see fit
+2) Name the `'assemblyRunID'` as you see fit
 3) Change any other input files or add other options.
 To see all the possible inputs for the wdl run womtool
 ```
