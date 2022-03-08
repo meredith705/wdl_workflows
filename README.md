@@ -34,15 +34,48 @@ wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/inputs.js
 cd ../
 ```
 # Usage
+Edit the `inputs.json` file:
+1) specify the path to your shasta assembly file: `Assembly-Detailed.gfa`
+2) Name the 'assemblyRunID' as you see fit
+3) Change any other input files or add other options.
+To see all the possible inputs for the wdl run womtool
+```
+java -jar bin/womtool-71.jar inputs gfase_yak_dipcall_whatshap.wdl
+```
+
 Run the wdl workflow:
 ```
 java -jar bin/cromwell-71.jar run -i inputs.json gfase_yak_dipcall_whatshap.wdl
 ```
 
 # Output
-wdl output is found in `cromwell-executions` followed by the apporpriate run number
+wdl output is found in `cromwell-executions` followed by the apporpriate run id (###)
+
+For now look at the yak and dipcall/whatshap output individually:
 ```
-maternal.fasta
-paternal.fasta
-unphased.fasta
+# yak summary
+cat cromwell-executions/GFAseYakDipcallWhatshap/###/call-yakAssemblyStats/execution/paternal.summary.txt 
+# mat qv
+FR      0.000994        0.00149
+ER      132200147       826381.441
+CV      0.049
+QV      37.085  36.941
+# pat qv
+FR      0.00104 0.00154
+ER      133187440       857064.852
+CV      0.049
+QV      36.975  36.814
+# mat switch
+W       10713   65621   0.163256    # switch error rate
+H       8674    65636   0.132153    # hamming rate
+N       8734    56904   0.133063
+# pat switch
+W       10695   64596   0.165568    # switch error rate
+H       9018    64617   0.139561    # hamming rate
+N       55370   9249    0.143131
+
+# dipcall/whatshap summary
+awk '{print $2,$33,$37}' cromwell-executions/GFAseYakDipcallWhatshap/###/call-coalesceResults/execution/sample.full.tsv
+chromosome all_switch_rate blockwise_hamming_rate
+chr11 0.00042188159189987344 0.00021093338020741783
 ```
