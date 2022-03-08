@@ -16,7 +16,9 @@ workflow GFAseYakDipcallWhatshap {
         File reference
         File yakCountFilePat
         File yakCountFileMat
+        File yakCountFileSon
         String sampleId="sample"
+        String assemblyRunID
     }
 
     call gfase_t.gfasePhase as gfase{
@@ -32,7 +34,8 @@ workflow GFAseYakDipcallWhatshap {
             assemblyFastaPat=gfase.outPatAssembly, 
             assemblyFastaMat=gfase.outMatAssembly, 
             patYak=yakCountFilePat, 
-            matYak=yakCountFileMat
+            matYak=yakCountFileMat,
+            sampleYak = yakCountFileSon
     }
 
     call dipcall_t.dipcall as dipcall {
@@ -59,6 +62,13 @@ workflow GFAseYakDipcallWhatshap {
             tarballs=[whatshapAnalysis.outputTarball],
             outputIdentifier=sampleId
     }
+
+    #call makeSummaryStatFile {
+    #    input:
+    #        yakSummary = yakAssemblyStats.outputSummary,
+    #        dipWhatshapFull = coalesceResults.fullOutput,
+    #        assemblyID = assemblyRunID
+    #}
 
     output {
         File whatshapTarball = whatshapAnalysis.outputTarball
@@ -101,7 +111,6 @@ task addPhaseSetToVCF {
         zcat ~{gzippedVcf} | grep -v "^#" | sed 's/AD/AD:PS/' | sed 's/$/:1/' >>$OUTPUT
 
         bgzip $OUTPUT
-
     >>>
 
     output {
@@ -112,6 +121,46 @@ task addPhaseSetToVCF {
         docker: dockerImage
         cpu: threadCount
         memory: memoryGB + "GB"
+    }
+}
+
+task makeSummaryStatFile {
+    input {
+        File yakSummary 
+        File dipWhatshapFull
+        String assemblyID
+        Int memSizeGB = 128
+        Int threadCount = 1
+        String dockerImage = "meredith705/gfase:latest"
+    }
+
+    command <<<
+        # Set the exit code of a pipeline to that of the rightmost command
+        # to exit with a non-zero status, or zero if all commands of the pipeline exit
+        set -o pipefail
+        # cause a bash script to exit immediately when a command fails
+        set -e
+        # cause the bash shell to treat unset variables as an error and exit immediately
+        set -u
+        # echo each line of the script to stdout so we can see what is happening
+        # to turn off echo do 'set +o xtrace'
+        set -o xtrace
+
+        # combine output files into one summary file
+        EVAL_SUMMARY=$(basename ~{assemblyID}).summary.txt
+        echo "dipcall/whatshap all_switch_rate:" >> $EVAL_SUMMARY
+        grep "ALL" ~{dipWhatshapFull} | awk '{print $33}' >> $EVAL_SUMMARY
+        cat ~{yakSummary} >> $EVAL_SUMMARY
+    >>>
+
+    output {
+        File eval_sumary = "*.summary.txt"
+    }
+
+    runtime {
+        docker: dockerImage
+        cpu: threadCount
+        memory: memSizeGB + "GB"
     }
 }
 
