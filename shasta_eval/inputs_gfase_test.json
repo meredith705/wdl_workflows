@@ -1,7 +1,0 @@
-{
-  "runGFAsePhase.matKmerFile": "/public/groups/vg/memeredith/czi/hg002/GFAse/GFAse/data/big_test_maternal_kmers.fasta",
-  "runGFAsePhase.assemblyDetailed": "/public/groups/vg/memeredith/czi/hg002/GFAse/GFAse/data/big_test.gfa",
-  "runGFAsePhase.patKmerFile": "/public/groups/vg/memeredith/czi/hg002/GFAse/GFAse/data/big_test_paternal_kmers.fasta",
-  "runGFAsePhase.kmsize": "5"
-}
-
