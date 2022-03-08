@@ -63,12 +63,12 @@ workflow GFAseYakDipcallWhatshap {
             outputIdentifier=sampleId
     }
 
-    #call makeSummaryStatFile {
-    #    input:
-    #        yakSummary = yakAssemblyStats.outputSummary,
-    #        dipWhatshapFull = coalesceResults.fullOutput,
-    #        assemblyID = assemblyRunID
-    #}
+    call makeSummaryStatFile {
+        input:
+            yakSummary = yakAssemblyStats.outputSummary,
+            dipWhatshapFull = coalesceResults.fullOutput,
+            assemblyID = assemblyRunID
+    }
 
     output {
         File whatshapTarball = whatshapAnalysis.outputTarball
@@ -147,10 +147,12 @@ task makeSummaryStatFile {
         set -o xtrace
 
         # combine output files into one summary file
-        EVAL_SUMMARY=$(basename ~{assemblyID}).summary.txt
-        echo "dipcall/whatshap all_switch_rate:" >> $EVAL_SUMMARY
-        grep "ALL" ~{dipWhatshapFull} | awk '{print $33}' >> $EVAL_SUMMARY
-        cat ~{yakSummary} >> $EVAL_SUMMARY
+        # write to outputfile
+        SUMMARY_FILE=`basename ~{assemblyID}`.summary.txt
+        echo "dipcall/whatshap all_switch_rate:" >> $SUMMARY_FILE
+
+        awk '{print $2,$33,$37}' ~{dipWhatshapFull} >> $SUMMARY_FILE
+        cat ~{yakSummary} >> $SUMMARY_FILE
     >>>
 
     output {
