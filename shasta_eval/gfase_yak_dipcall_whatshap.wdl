@@ -155,10 +155,6 @@ task makeSummaryStatFile {
         cat ~{yakSummary} >> $SUMMARY_FILE
     >>>
 
-    output {
-        File eval_sumary = "*.summary.txt"
-    }
-
     runtime {
         docker: dockerImage
         cpu: threadCount
