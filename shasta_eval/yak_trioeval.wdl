@@ -1,4 +1,4 @@
-version 1.0
+hg02.ilmn250.k31.pe.yak version 1.0
 
 workflow runYakAssemblyStats {
 	
@@ -7,10 +7,10 @@ workflow runYakAssemblyStats {
 		File assemblyFastaMat
 		File yakCountPat
 		File yakCountMat
-        File yakCountSon
+		File yakCountSon
 		Int shardLinesPerFile = 256000000
-        Int fileExtractionDiskSizeGB = 256
-        String dockerImage = "juklucas/hpp_yak:latest"
+		Int fileExtractionDiskSizeGB = 256
+		String dockerImage = "juklucas/hpp_yak:latest"
 
 	}
 
