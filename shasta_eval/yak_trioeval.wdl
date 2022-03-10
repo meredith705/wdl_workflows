@@ -7,6 +7,7 @@ workflow runYakAssemblyStats {
 		File assemblyFastaMat
 		File yakCountPat
 		File yakCountMat
+        File yakCountSon
 		Int shardLinesPerFile = 256000000
         Int fileExtractionDiskSizeGB = 256
         String dockerImage = "juklucas/hpp_yak:latest"
@@ -20,12 +21,12 @@ workflow runYakAssemblyStats {
             assemblyFastaMat=assemblyFastaMat,
             patYak=yakCountPat,
             matYak=yakCountMat,
-            #sampleYak=yakCountSample.outputYak,
+            sampleYak=yakCountSon,
             dockerImage=dockerImage
     }
 
 	output {
-		#File outputTarball = yakAssemblyStats.outputTarball
+		File outputTarball = yakAssemblyStats.outputTarball
 		File outputSummary = yakAssemblyStats.outputSummary
 	}
 
@@ -35,9 +36,9 @@ task yakAssemblyStats {
     input {
         File assemblyFastaPat
         File assemblyFastaMat
-        File patYak    # changed this to the input yak dbs
-        File matYak    # changed this also
-        #File sampleYak
+        File patYak    # changed to the input yak dbs
+        File matYak    # changed also
+        File sampleYak
         String genomeSize = "3.2g"
         String minSequenceLength = "100k"
         # runtime configurations
@@ -46,6 +47,7 @@ task yakAssemblyStats {
         Int diskSizeGB = 256
         String dockerImage = "juklucas/hpp_yak:latest"
     }
+
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
         # to exit with a non-zero status, or zero if all commands of the pipeline exit
@@ -65,13 +67,17 @@ task yakAssemblyStats {
         yak trioeval -t ~{threadCount} ~{patYak} ~{matYak} ~{assemblyFastaPat} > $PREFIX.pat.yak.switch-error.txt
         yak trioeval -t ~{threadCount} ~{patYak} ~{matYak} ~{assemblyFastaMat} > $PREFIX.mat.yak.switch-error.txt
 
+        # QV
+        yak qv -t ~{threadCount} -p -K ~{genomeSize} -l ~{minSequenceLength} ~{sampleYak} ~{assemblyFastaPat} > $PREFIX.pat.yak.qv.txt
+        yak qv -t ~{threadCount} -p -K ~{genomeSize} -l ~{minSequenceLength} ~{sampleYak} ~{assemblyFastaMat} > $PREFIX.mat.yak.qv.txt
+
 
         # condense
         SUMMARY=$PREFIX.summary.txt
-        #echo "# mat qv" >>$SUMMARY
-        #tail -n4 $PREFIX.mat.yak.qv.txt >>$SUMMARY
-        #echo "# pat qv" >>$SUMMARY
-        #tail -n4 $PREFIX.pat.yak.qv.txt >>$SUMMARY
+        echo "# mat qv" >>$SUMMARY
+        tail -n4 $PREFIX.mat.yak.qv.txt >>$SUMMARY
+        echo "# pat qv" >>$SUMMARY
+        tail -n4 $PREFIX.pat.yak.qv.txt >>$SUMMARY
         echo "# mat switch" >>$SUMMARY
         tail -n3 $PREFIX.mat.yak.switch-error.txt >>$SUMMARY
         echo "# pat switch" >>$SUMMARY
@@ -90,7 +96,7 @@ task yakAssemblyStats {
     }
 
     output {
-        #File outputTarball = glob("*.yak-qc.tar.gz")[0]
+        File outputTarball = glob("*.yak-qc.tar.gz")[0]
         File outputSummary = glob("*.summary.txt")[0]
     }
 }
