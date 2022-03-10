@@ -30,7 +30,6 @@ wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg02.ilmn
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/GIAB_HG002_GRCh38_1_22_v4.2.1_phased.vcf && \
 # check into adding the medically relevant genes vcf
 wget https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/references/GRCh38/GCA_000001405.15_GRCh38_no_alt_analysis_set_maskedGRC_exclusions_v2.fasta.gz && \
-wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/inputs.json
 cd ../
 ```
 # Usage
