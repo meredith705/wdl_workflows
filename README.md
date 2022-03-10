@@ -21,7 +21,7 @@ git clone https://github.com/meredith705/wdl_workflows.git
 Download the yak parental count files, phased GIAB_hg002_v_hg38_truthset.vcf, and hg38 assembly. These are downloaded outside of the WDL and are re-used in each WDL execution. 
 The files and paths in inputs.json can be updated as needed. The inputs.json file assumes the input data is a subdirectory of the shasta_eval working directory where the wdl will be executed.
 ```
-cd shasta_eval
+cd wdl_workflows/shasta_eval
 mkdir input_data
 cd input_data
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg03.hiseq.k31.pe.yak && \
