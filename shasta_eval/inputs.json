@@ -3,12 +3,12 @@
   "GFAseYakDipcallWhatshap.assemblyRunID": "chr11",
   "GFAseYakDipcallWhatshap.dipcall.threadCount": "64",
   "GFAseYakDipcallWhatshap.dipcall.isMaleSample": "True",
-  "GFAseYakDipcallWhatshap.yakCountFilePat": "/input_data/hg03.ilmn.k31.pe.yak",
+  "GFAseYakDipcallWhatshap.yakCountFilePat": "input_data/hg03.ilmn.k31.pe.yak",
   "GFAseYakDipcallWhatshap.kmerSize": "31",
-  "GFAseYakDipcallWhatshap.patKmerFasta": "/input_data/hg03.48_55.unique.k31.fa",
-  "GFAseYakDipcallWhatshap.yakCountFileMat": "/input_data/hg04.ilmn.k31.pe.yak",
-  "GFAseYakDipcallWhatshap.reference": "/input_data/GCA_000001405.15_GRCh38_no_alt_analysis_set_maskedGRC_exclusions_v2.fasta.gz",
-  "GFAseYakDipcallWhatshap.truthVcf": "/input_data/GIAB_HG002_GRCh38_1_22_v4.2.1_phased.vcf",
-  "GFAseYakDipcallWhatshap.matKmerFasta": "/input_data/hg04.54_61.unique.k31.fa",
-  "GFAseYakDipcallWhatshap.yakCountFileSon": "/input_data/hg02.ilmn250.k31.pe.yak"
+  "GFAseYakDipcallWhatshap.patKmerFasta": "input_data/hg03.48_55.unique.k31.fa",
+  "GFAseYakDipcallWhatshap.yakCountFileMat": "input_data/hg04.ilmn.k31.pe.yak",
+  "GFAseYakDipcallWhatshap.reference": "input_data/GCA_000001405.15_GRCh38_no_alt_analysis_set_maskedGRC_exclusions_v2.fasta.gz",
+  "GFAseYakDipcallWhatshap.truthVcf": "input_data/GIAB_HG002_GRCh38_1_22_v4.2.1_phased.vcf",
+  "GFAseYakDipcallWhatshap.matKmerFasta": "input_data/hg04.54_61.unique.k31.fa",
+  "GFAseYakDipcallWhatshap.yakCountFileSon": "input_data/hg02.ilmn250.k31.pe.yak"
 }
