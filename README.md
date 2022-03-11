@@ -3,13 +3,25 @@
 WDL workflows that automates runing GFAse, yak, dipcall, and whatshap on shasta assembly small bubble gfa files. 
 
 # WDL Dependencies 
-Install cromwell tools to run wdl worflows locally:
+download cromwell tools to run wdl worflows locally:
 ```
-cd bin
 wget https://github.com/broadinstitute/cromwell/releases/download/71/cromwell-71.jar
 wget https://github.com/broadinstitute/cromwell/releases/download/71/womtool-71.jar
 ```
-TODO: add jdk install information
+install jdk
+```
+sudo apt-get update
+sudo apt install openjdk-17-jre-headless
+```
+install docker ( directions from here https://docs.docker.com/engine/install/ubuntu/ )
+```
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
 
 # Installation
 Clone this git repo to obtain the wdl workflows:
