@@ -24,8 +24,8 @@ The files and paths in inputs.json can be updated as needed. The inputs.json fil
 cd wdl_workflows/shasta_eval
 mkdir input_data
 cd input_data
-wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg03.hiseq.k31.pe.yak && \
-wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg04.hiseq.k31.pe.yak && \
+wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg03.ilmn.k31.pe.yak && \
+wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg04.ilmn.k31.pe.yak && \
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg02.ilmn250.k31.pe.yak && \
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg03.48_55.unique.k31.fa && \
 wget http://public.gi.ucsc.edu/~memeredith/hg002_shasta_eval_wdl_files/hg04.54_61.unique.k31.fa && \
