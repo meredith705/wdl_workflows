@@ -3,17 +3,17 @@
 WDL workflows that automates runing GFAse, yak, dipcall, and whatshap on shasta assembly small bubble gfa files. 
 
 # WDL Cromwell Dependencies 
-download cromwell tools to run wdl worflows locally:
+Download cromwell tools to run wdl worflows locally:
 ```
 wget https://github.com/broadinstitute/cromwell/releases/download/71/cromwell-71.jar
 wget https://github.com/broadinstitute/cromwell/releases/download/71/womtool-71.jar
 ```
-install jdk
+Install jdk
 ```
 sudo apt-get update
 sudo apt install openjdk-17-jre-headless
 ```
-install docker ( directions from here https://docs.docker.com/engine/install/ubuntu/ )
+Install docker ( directions from here https://docs.docker.com/engine/install/ubuntu/ )
 ```
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo \
@@ -53,12 +53,12 @@ Edit the `inputs.json` file:
 3) Change any other input files or add other options.
 To see all the possible inputs for the wdl run womtool
 ```
-java -jar bin/womtool-71.jar inputs gfase_yak_dipcall_whatshap.wdl
+sudo java -jar bin/womtool-71.jar inputs gfase_yak_dipcall_whatshap.wdl
 ```
 
 Run the wdl workflow:
 ```
-java -jar bin/cromwell-71.jar run -i inputs.json gfase_yak_dipcall_whatshap.wdl
+sudo java -jar bin/cromwell-71.jar run -i inputs.json gfase_yak_dipcall_whatshap.wdl
 ```
 
 # Output
