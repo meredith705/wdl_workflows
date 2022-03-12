@@ -2,7 +2,7 @@
 
 WDL workflows that automates runing GFAse, yak, dipcall, and whatshap on shasta assembly small bubble gfa files. 
 
-# WDL Dependencies 
+# WDL Cromwell Dependencies 
 download cromwell tools to run wdl worflows locally:
 ```
 wget https://github.com/broadinstitute/cromwell/releases/download/71/cromwell-71.jar
