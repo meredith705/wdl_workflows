@@ -1,6 +1,7 @@
 version: 1.2
 workflows:
-  - subclass: WDL
+  - name: seqkitStats
+    subclass: WDL
     primaryDescriptorPath: /seqkit_stats_wdl/seqkitStats.wdl
     authors:
       - orcid: 0000-0001-5736-3193
