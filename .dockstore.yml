@@ -5,3 +5,8 @@ workflows:
     primaryDescriptorPath: /seqkit_stats_wdl/seqkitStats.wdl
     authors:
       - orcid: 0000-0001-5736-3193
+workflows:
+  - name: happyEval
+    subclass: WDL
+    primaryDescriptorPath: /happy_wdl/happy_evaluation.wdl
+
