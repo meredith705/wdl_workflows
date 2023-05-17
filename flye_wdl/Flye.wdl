@@ -37,7 +37,6 @@ task Assemble {
         String dockerImage = "quay.io/biocontainers/flye:2.9.1--py310h590eda1_0"
         Int threads = 24
         Int memSizeGB = 768
-        Int boot_disk_gb = 10
         Int preemptible_tries = 0
         Int max_retries = 0
     }
@@ -70,7 +69,6 @@ task Assemble {
         cpu:                    threads
         memory:                 memSizeGB + " GB"
         disks: "local-disk " +  disk_size + " SSD"
-        bootDiskSizeGb:         boot_disk_gb
         preemptible:            preemptible_tries
         maxRetries:             max_retries
         docker:                 dockerImage
