@@ -51,9 +51,8 @@ task Assemble {
     command <<<
         set -euxo pipefail
 
-        num_core=$(cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l)
 
-        flye ~{flye_args} ~{reads} --threads $num_core --out-dir asm
+        flye ~{flye_args} ~{reads} --threads ~{threads} --out-dir asm
 
         mv asm/assembly.fasta ~{prefix}.flye.fa
         mv asm/assembly_graph.gfa ~{prefix}.flye.gfa
