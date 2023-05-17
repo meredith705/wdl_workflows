@@ -1,0 +1,4 @@
+{
+  "Flye.prefix": "test_ont",
+  "Flye.reads": "test_ont.fastq.gz"
+}
