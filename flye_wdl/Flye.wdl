@@ -68,8 +68,8 @@ task Assemble {
 
     runtime {
         cpu:                    threads
-        memory:                 memSizeGB + " GiB"
-        disks: "local-disk " +  disk_size + " HDD"
+        memory:                 memSizeGB + " GB"
+        disks: "local-disk " +  disk_size + " SSD"
         bootDiskSizeGb:         boot_disk_gb
         preemptible:            preemptible_tries
         maxRetries:             max_retries
