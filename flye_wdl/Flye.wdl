@@ -37,6 +37,7 @@ task Assemble {
         String dockerImage = "quay.io/biocontainers/flye:2.9.1--py310h590eda1_0"
         Int threads = 24
         Int memSizeGB = 768
+        Int disk_size = 1125
         Int preemptible_tries = 0
         Int max_retries = 0
     }
@@ -46,7 +47,6 @@ task Assemble {
         prefix:   "prefix to apply to assembly output filenames"
     }
 
-    Int disk_size = 10 * ceil(size(reads, "GB"))
 
     command <<<
         set -euxo pipefail
@@ -68,7 +68,7 @@ task Assemble {
     runtime {
         cpu:                    threads
         memory:                 memSizeGB + " GB"
-        disks: "local-disk " +  disk_size + " SSD"
+        disks: "local-disk " +  disk_size + " LOCAL"
         preemptible:            preemptible_tries
         maxRetries:             max_retries
         docker:                 dockerImage
