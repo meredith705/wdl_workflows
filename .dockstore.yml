@@ -8,5 +8,8 @@ workflows:
   - name: happyEval
     subclass: WDL
     primaryDescriptorPath: /happy_wdl/happy_evaluation.wdl
+  - name: flye
+    subclass: WDL
+    primaryDescriptorPath: /flye_wdl/Flye.wdl
 
 
