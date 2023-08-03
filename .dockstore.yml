@@ -11,5 +11,8 @@ workflows:
   - name: flye
     subclass: WDL
     primaryDescriptorPath: /flye_wdl/Flye.wdl
+  - name: quastOutput
+    subclass: WDL
+    primaryDescriptorPath: /shasta_eval/quast_output.wdl
 
 
