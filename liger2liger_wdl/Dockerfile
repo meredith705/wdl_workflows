@@ -34,13 +34,6 @@ RUN cd /home/apps && \
     cmake .. && \
     make -j 8
 
-RUN cd /home/apps && \
-    git clone -b wdl_debug https://github.com/rlorigro/GFAse.git && \
-    cd GFAse && \
-    mkdir build && \
-    cd build && \
-    cmake .. && \
-    make -j 8 
 
 
 ENV PATH="/home/apps/samtools-1.15.1:${PATH}"
