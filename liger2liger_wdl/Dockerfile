@@ -9,7 +9,7 @@ RUN cd /home/apps && \
     tabix python3.8 python3.8-dev python3-pip \
     protobuf-compiler pkg-config libprotobuf-dev libjansson-dev libhts-dev libncurses-dev \
     libbz2-dev liblzma-dev zlib1g-dev autoconf libcurl4-openssl-dev curl libomp-dev libssl-dev python3-tk \
-    pip3 install matplotlib
+    pip install matplotlib
 
 WORKDIR /home/apps
 RUN wget https://github.com/samtools/samtools/releases/download/1.15.1/samtools-1.15.1.tar.bz2 && \
