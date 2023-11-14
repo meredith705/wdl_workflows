@@ -8,7 +8,7 @@ RUN cd /home/apps && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y vim git wget make build-essential cmake \
     tabix python3.8 python3.8-dev python3-pip \
     protobuf-compiler pkg-config libprotobuf-dev libjansson-dev libhts-dev libncurses-dev \
-    libbz2-dev liblzma-dev zlib1g-dev autoconf libcurl4-openssl-dev curl libomp-dev libssl-dev python3-tk \
+    libbz2-dev liblzma-dev zlib1g-dev autoconf libcurl4-openssl-dev curl libomp-dev libssl-dev python3-tk && \
     pip install matplotlib
 
 WORKDIR /home/apps
