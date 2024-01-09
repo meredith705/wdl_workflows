@@ -18,6 +18,7 @@ python3.9 extract_shasta_asm_info.py -f shataLogFiles.txt
 import argparse
 import os
 import tarfile
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -27,14 +28,40 @@ read_n50s = []
 shasta_n50s = []
 shasta_assembled_len = []
 estimated_genome_coverage = []
-
+discarded_reads = []
+discarded_bases = []
+reads_kept = []
+raw_bases_kept = []
 
 def get_stasta_asm_info(infile):
     """ Extract the read and assembly info reported by Shasta """
     added_read_n50 = False
     added_gcov = False
+    added_discarded = False
+    added_total = False
     with open(infile, 'r') as file:
         for line in file.readlines():
+            # discarded reads
+            if "short reads for a total" in line:
+                tokens = line.strip().split()
+
+                dreads = int(tokens[1])
+                dbases = int(tokens[-2])
+                print('d reads', dreads, 'dbases', dbases)
+                if not added_discarded:
+                    discarded_reads.append(dreads)
+                    discarded_bases.append(dbases)
+                    added_discarded = True
+                else:
+                    discarded_reads[-1] = dreads
+                    discarded_bases[-1] = dbases
+            if "Total number of reads is" in line:
+                tokens = line.strip().split()
+                if not added_total:
+                    reads_kept.append(int(tokens[-1][:-1]))
+                    added_total = True
+                else:
+                    reads_kept[-1] = int(tokens[-1][:-1])
             # isolate input file/sample name
             if "shasta --input" in line:
                 tokens = line.strip().split()
@@ -46,10 +73,11 @@ def get_stasta_asm_info(infile):
                 tokens = line.strip().split()
                 if tokens[-1][:-1].isdigit():
                     if not added_gcov:
-                        estimated_genome_coverage.append(int(tokens[-1][:-1])/3200000000)
+                        raw_bases_kept.append(int(tokens[-1][:-1]))
+                        estimated_genome_coverage.append(int(tokens[-1][:-1])/3100000000)
                         added_gcov = True
                     else:
-                        estimated_genome_coverage[-1]=int(tokens[-1][:-1])/3200000000
+                        estimated_genome_coverage[-1]=int(tokens[-1][:-1])/3100000000
             # store read and assembly N50
             if "N50" in line:
                 tokens = line.strip().split()
@@ -118,21 +146,97 @@ def plotting(output_dir, add_lables=True, label_cutoff=.05):
     fig.tight_layout()
     fig.savefig(output_dir + "/shastaLogPlots.png", dpi=150)
 
+def plotting_discarded_reads(output_dir):
+    """ Plot barplot of discarded and kept reads per sample """
+    # How many reads are discarded per sample? Plot Number of reads and Fraction of total reads
+    print('what values here:', samples, reads_kept, discarded_reads, raw_bases_kept)
+    total_reads=[ d+k for d,k in zip(discarded_reads,reads_kept)]
+    y = np.arange(len(discarded_reads))
+    fig, ((ax1, ax2)) = plt.subplots(1, 2, figsize=(20, 10))#,sharex=True)
+
+    ax1.barh(samples,reads_kept,color='black',alpha=0.5)
+    ax1.barh(samples, discarded_reads,left=reads_kept)
+
+    # ax1.set_xticklabels(samples,rotation=90)
+    ax1.set(title="Number of Reads Discarded and Kept by Shasta", xlabel="# reads")
+    ax1.legend(["Discarded","Kept"], prop ={'size': 10})
+
+    ax2.hist([ d/t for d,t in zip(discarded_reads,total_reads)],edgecolor = "black",color = 'gray')
+
+    ax2.set(title="Fraction of Total Reads Shasta Discarded", xlabel="Percentage of total reads")
+
+    fig.tight_layout()
+    fig.savefig(output_dir + "/Shasta_Discarded_Reads.png")
+    # clear the figure Artist to make another plot
+    fig.clf(False)
+
+    """ Plot the Number of bases Discarded, instead of # of reads """
+
+    total_bases = [d + k for d, k in zip(discarded_bases, raw_bases_kept)]
+
+    fig, ((ax1, ax2)) = plt.subplots(1, 2, figsize=(20, 10))  # ,sharex=True)
+    ax1.barh(samples, discarded_bases)
+    ax1.barh(samples, raw_bases_kept, left=discarded_bases, color='black', alpha=0.5)
+
+    # ax1.set_xticklabels(samples,rotation=90)
+    ax1.set(title="Number of Bases Discarded and Kept by Shasta", xlabel="# bases")
+    ax1.legend(["Discarded", "Kept"], prop={'size': 10})
+
+    ax2.hist([d / t for d, t in zip(discarded_bases, total_bases)], edgecolor="black", color='gray')
+
+    ax2.set(title="Fraction of Total Bases Shasta Discarded", xlabel="Percentage of total Bases")
+
+    fig.tight_layout()
+    fig.savefig(output_dir + "/Shasta_Discarded_Bases.png")
+
+
+
+# def write_out_info(output_dir):
+#     """ Write all info into log file """
+#     print("writing data to:", output_dir + "/shasta_stats.csv")
+#     # if the file is empty write header
+#     # if not os.path.exists(output_dir + "/shasta_stats.csv"):
+#     log_out = open(output_dir + "/shasta_stats.csv", 'w')
+#     fields = ['sample', "read_n50","est_read_cov", "shasta_asm_n50", "shasta_asm_len"]
+#     log_out.write((',').join(fields) + '\n')
+#         # log_out.close()
+#
+#     # open file
+#     # log_out = open(output_dir + "/shasta_stats.csv", 'a')
+#     # format line and write
+#     for i, sam in enumerate(samples):
+#         outlist = [str(sam), str(read_n50s[i]), str(round(estimated_genome_coverage[i],2)), str(shasta_n50s[i]), str(shasta_assembled_len[i])]
+#         outstring = (',').join(outlist) + '\n'
+#         log_out.write(outstring)
+#     log_out.close()
+
 def write_out_info(output_dir):
     """ Write all info into log file """
     print("writing data to:", output_dir + "/shasta_stats.csv")
     # if the file is empty write header
     # if not os.path.exists(output_dir + "/shasta_stats.csv"):
     log_out = open(output_dir + "/shasta_stats.csv", 'w')
-    fields = ['sample', "read_n50","est_read_cov", "shasta_asm_n50", "shasta_asm_len"]
+    fields = ['sample', "read_n50","est_read_cov", "shasta_asm_n50", "shasta_asm_len", "ratio_of_reads_discarded",
+              "ratio_of_bases_discarded", "discarded_reads", "reads_kept_for_asm","total_reads", "discarded_bases",
+              "bases_kept_for_asm", "total_bases"]
     log_out.write((',').join(fields) + '\n')
         # log_out.close()
 
     # open file
     # log_out = open(output_dir + "/shasta_stats.csv", 'a')
+    total_reads=[ d+k for d,k in zip(discarded_reads,reads_kept)]
+    total_bases=[ d+k for d,k in zip(discarded_bases,raw_bases_kept)]
     # format line and write
     for i, sam in enumerate(samples):
-        outlist = [str(sam), str(read_n50s[i]), str(round(estimated_genome_coverage[i],2)), str(shasta_n50s[i]), str(shasta_assembled_len[i])]
+        outlist = [str(sam), str(read_n50s[i]),
+                   str(round(estimated_genome_coverage[i],2)), str(shasta_n50s[i]),
+                   str(shasta_assembled_len[i]), str(round(discarded_reads[i]/total_reads[i],4)),
+                   str(round(discarded_bases[i]/total_bases[i],4)),
+                   str(discarded_reads[i]),
+                   str(reads_kept[i]), str(total_reads[i]),
+                   str(discarded_bases[i]), str(raw_bases_kept[i]),
+                   str(total_bases[i])
+                  ]
         outstring = (',').join(outlist) + '\n'
         log_out.write(outstring)
     log_out.close()
@@ -157,7 +261,7 @@ def main(shastaLog="", shastaLogsFile="", output_dir="output"):
                     print('not a tar.gz file')
                     get_stasta_asm_info(file.strip())
                 if len(read_n50s) != len(shasta_n50s):
-                    print('Problem: lists DIFF LEN', len(read_n50s), read_n50s[-5:], len(shasta_n50s), shasta_n50s[-5:])
+                    print('Problem: read and shasta: lists DIFF LEN', len(read_n50s), read_n50s[-5:], len(shasta_n50s), shasta_n50s[-5:])
                     break
     # for single file input just run get_shasta_asm_info
     if len(shastaLog)>0:
@@ -174,6 +278,7 @@ def main(shastaLog="", shastaLogsFile="", output_dir="output"):
 
     # plot and write data to file
     plotting(output_dir)
+    plotting_discarded_reads(output_dir)
     write_out_info(output_dir)
 
 
