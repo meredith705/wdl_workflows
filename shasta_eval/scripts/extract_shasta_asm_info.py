@@ -81,13 +81,18 @@ def get_stasta_asm_info(infile):
             # store read and assembly N50
             if "N50" in line:
                 tokens = line.strip().split()
+                print('n50 tokens', tokens)
                 if tokens[2] == 'read' and tokens[5].isdigit():
                     if not added_read_n50:
+                        print('adding read n50', tokens)
                         read_n50s.append(int(tokens[5]))
                         added_read_n50=True
                     else:
                         read_n50s[-1]=int(tokens[5])
+            if "N50 for assembly segments is" in line:
+                print('assembly n50 line', line)
                 if tokens[2] == 'assembly' and tokens[5].isdigit():
+                    print('adding shasta n50', tokens)
                     shasta_n50s.append(int(tokens[5]))
             # store total assembly length
             if "Total length" in line:
@@ -95,6 +100,8 @@ def get_stasta_asm_info(infile):
                 if tokens[-1].isdigit():
                     # print('shasta assembled sequence', tokens[-1])
                     shasta_assembled_len.append(int(tokens[-1]))
+
+            print(line)
 
 def best_worst_labels():
     labels = [""]*len(shasta_n50s)
@@ -190,26 +197,6 @@ def plotting_discarded_reads(output_dir):
     fig.savefig(output_dir + "/Shasta_Discarded_Bases.png")
 
 
-
-# def write_out_info(output_dir):
-#     """ Write all info into log file """
-#     print("writing data to:", output_dir + "/shasta_stats.csv")
-#     # if the file is empty write header
-#     # if not os.path.exists(output_dir + "/shasta_stats.csv"):
-#     log_out = open(output_dir + "/shasta_stats.csv", 'w')
-#     fields = ['sample', "read_n50","est_read_cov", "shasta_asm_n50", "shasta_asm_len"]
-#     log_out.write((',').join(fields) + '\n')
-#         # log_out.close()
-#
-#     # open file
-#     # log_out = open(output_dir + "/shasta_stats.csv", 'a')
-#     # format line and write
-#     for i, sam in enumerate(samples):
-#         outlist = [str(sam), str(read_n50s[i]), str(round(estimated_genome_coverage[i],2)), str(shasta_n50s[i]), str(shasta_assembled_len[i])]
-#         outstring = (',').join(outlist) + '\n'
-#         log_out.write(outstring)
-#     log_out.close()
-
 def write_out_info(output_dir):
     """ Write all info into log file """
     print("writing data to:", output_dir + "/shasta_stats.csv")
@@ -265,10 +252,18 @@ def main(shastaLog="", shastaLogsFile="", output_dir="output"):
                     break
     # for single file input just run get_shasta_asm_info
     if len(shastaLog)>0:
-        tfile = tarfile.open(shastaLog, 'r')
-        tfile.extract("shasta.log", "./tfile")
-        get_stasta_asm_info("./tfile/shasta.log")
-        tfile.close()
+        if shastaLog.strip()[-6:] == "tar.gz":
+            tfile = tarfile.open(shastaLog, 'r')
+            tfile.extract("shasta.log", "./tfile")
+            get_stasta_asm_info("./tfile/shasta.log")
+            tfile.close()
+        else:
+            print('not a tar.gz file')
+            get_stasta_asm_info(shastaLog)
+
+        if len(read_n50s) != len(shasta_n50s):
+            print('Problem: read and shasta: lists DIFF LEN', len(read_n50s), read_n50s[-5:], len(shasta_n50s),
+                  shasta_n50s[-5:])
 
 
     if os.path.exists(output_dir):
@@ -277,8 +272,8 @@ def main(shastaLog="", shastaLogsFile="", output_dir="output"):
         os.makedirs(output_dir)
 
     # plot and write data to file
-    plotting(output_dir)
-    plotting_discarded_reads(output_dir)
+    # plotting(output_dir)
+    # plotting_discarded_reads(output_dir)
     write_out_info(output_dir)
 
 
