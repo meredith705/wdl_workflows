@@ -47,7 +47,7 @@ def get_stasta_asm_info(infile):
 
                 dreads = int(tokens[1])
                 dbases = int(tokens[-2])
-                print('d reads', dreads, 'dbases', dbases)
+                # print('d reads', dreads, 'dbases', dbases)
                 if not added_discarded:
                     discarded_reads.append(dreads)
                     discarded_bases.append(dbases)
@@ -67,6 +67,10 @@ def get_stasta_asm_info(infile):
                 tokens = line.strip().split()
                 samp = tokens[2].split("/")[-1].split("_")[:3]
                 samples.append("_".join(samp))
+            elif "shasta-Linux-0.11.1 --input" in line:
+                tokens = line.strip().split()
+                samp = tokens[2].split("/")[-1].split("_")[:3]
+                samples.append("_".join(samp))
 
             # Store genome coverage as Gibase
             if "raw bases" in line:
@@ -81,18 +85,16 @@ def get_stasta_asm_info(infile):
             # store read and assembly N50
             if "N50" in line:
                 tokens = line.strip().split()
-                print('n50 tokens', tokens)
                 if tokens[2] == 'read' and tokens[5].isdigit():
                     if not added_read_n50:
-                        print('adding read n50', tokens)
+                        # print('adding read n50', tokens)
                         read_n50s.append(int(tokens[5]))
                         added_read_n50=True
                     else:
                         read_n50s[-1]=int(tokens[5])
             if "N50 for assembly segments is" in line:
-                print('assembly n50 line', line)
                 if tokens[2] == 'assembly' and tokens[5].isdigit():
-                    print('adding shasta n50', tokens)
+                    # print('adding shasta n50', tokens)
                     shasta_n50s.append(int(tokens[5]))
             # store total assembly length
             if "Total length" in line:
@@ -101,7 +103,7 @@ def get_stasta_asm_info(infile):
                     # print('shasta assembled sequence', tokens[-1])
                     shasta_assembled_len.append(int(tokens[-1]))
 
-            print(line)
+            # print(line)
 
 def best_worst_labels():
     labels = [""]*len(shasta_n50s)
@@ -156,7 +158,7 @@ def plotting(output_dir, add_lables=True, label_cutoff=.05):
 def plotting_discarded_reads(output_dir):
     """ Plot barplot of discarded and kept reads per sample """
     # How many reads are discarded per sample? Plot Number of reads and Fraction of total reads
-    print('what values here:', samples, reads_kept, discarded_reads, raw_bases_kept)
+    # print('what values here:', samples, reads_kept, discarded_reads, raw_bases_kept)
     total_reads=[ d+k for d,k in zip(discarded_reads,reads_kept)]
     y = np.arange(len(discarded_reads))
     fig, ((ax1, ax2)) = plt.subplots(1, 2, figsize=(20, 10))#,sharex=True)
@@ -271,9 +273,14 @@ def main(shastaLog="", shastaLogsFile="", output_dir="output"):
     else:
         os.makedirs(output_dir)
 
+    data_lists = [samples,read_n50s,shasta_n50s,shasta_assembled_len,estimated_genome_coverage,discarded_reads,
+                discarded_bases,reads_kept,raw_bases_kept]
+    # for l in data_lists:
+    #     print(len(l))
+
     # plot and write data to file
-    # plotting(output_dir)
-    # plotting_discarded_reads(output_dir)
+    plotting(output_dir)
+    plotting_discarded_reads(output_dir)
     write_out_info(output_dir)
 
 
