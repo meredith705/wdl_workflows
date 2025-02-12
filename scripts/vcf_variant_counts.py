@@ -57,7 +57,7 @@ def vcfEntriesPerSample(in_vcf):
 				# print(record.info['SVTYPE'], 'sample', sample, data["GT"])
 				for allele in data["GT"]:
 					# count alleles that are not '.' nor 0
-					if allele is not None and allele >= 0:
+					if allele is not None and allele > 0:
 						# increment the variant count for the sample 
 						variant_counts[sample] += 1
 
@@ -86,7 +86,7 @@ def plot_violin(vcf_data):
 	""" set up the figure to plot a violin """
 	fig, axs = plt.subplots(figsize=(8,4))
 
-	violin_swarm(['variants']*vcf_data.shape[0], 'VarintCount', vcf_data, axs)
+	violin_swarm(['samples']*vcf_data.shape[0], 'VarintCount', vcf_data, axs)
 
 	plt.tight_layout()
 	plt.savefig("sample_variant_counts.png", dpi=300)
