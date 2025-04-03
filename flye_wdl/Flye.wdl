@@ -34,8 +34,6 @@ task Assemble {
         File reads
         String prefix = "out"
         String flye_args = "--nano-hq"
-        String flye_optional_args = ""
-        String dockerImage = "quay.io/biocontainers/flye:2.9.1--py310h590eda1_0"
         Int threads = 24
         Int memSizeGB = 400
         Int disk_size = 1024
