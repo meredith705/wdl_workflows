@@ -21,11 +21,11 @@ Author: Melissa Meredith
 """
 
 
-def download_data(tsv_path, download_column):
+def download_data(tsv_path, download_column, use_sample_in_filename):
 	print('tsv_path', tsv_path)
 	print('downlad data from column:', download_column)
 
-	if not os.path.isfile(tsv_path):
+	if (not os.path.isfile(tsv_path)):
 		print(f"Error: File '{tsv_path}' not found.")
 		return
 
@@ -52,11 +52,18 @@ def download_data(tsv_path, download_column):
 			sample_id = row[samplecol]
 
 			gslink = row[download_column]
+			# if link is empty skip it
+			if pd.isna(gslink):
+				continue
 
-			filename = f"{sample_id}_{gslink.str.split("/")[-1]}"
-
-			# make gs command 
-			gs_command = f"gsutil cp {gslink} ./{download_column}/{filename}"
+			if use_sample_in_filename:
+				gsfilename = gslink.split("/")[-1]
+				filename = f"{sample_id}_{gsfilename}"
+				# make gs command with sample id filename
+				gs_command = f"gsutil cp {gslink} ./{download_column}/{filename}"
+			else:
+				gs_command = f"gsutil cp {gslink} ./{download_column}/" 
+			
 
 			bash_script.write(f'{gs_command}\n\n')
 
@@ -89,6 +96,12 @@ if __name__ == "__main__":
         help="Column in tsv to make download commands."
     )
 
+    parser.add_argument(
+        "-s","--use_sample_in_filename",
+        action="store_true",
+        help="Use the sample id column to add sample id to the beginning of the downloaded filename."
+    )
+
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
@@ -97,4 +110,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Process the TSV file
-    download_data(args.in_tsv_file, args.column_to_download)
+    download_data(args.in_tsv_file, args.column_to_download, args.use_sample_in_filename)
