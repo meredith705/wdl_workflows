@@ -17,10 +17,9 @@ def parse_quast_report(report_path):
             # Each line looks like: "Genome fraction (%)   97.5"
             # split on whitespace
             parts = line.strip().split()
-            key = " ".join(parts[:-1])   # everything except last token
-            value = parts[-1]            # last token
+            key = " ".join(parts[:-1])   
+            value = parts[-1]            
 
-            print('key', key, '\tvalue', value)
             metrics[key] = value
 
     return metrics
