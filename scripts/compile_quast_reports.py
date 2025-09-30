@@ -25,11 +25,7 @@ def parse_quast_report(report_path):
                 
                 key = parts[0] + " " + parts[1] + " " + parts[2]
                 value = " ".join(parts[-4:])
-
-                print('special key', key, value)
-
-                       
-
+           
             metrics[key] = value
 
     return metrics
