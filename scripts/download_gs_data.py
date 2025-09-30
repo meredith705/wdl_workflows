@@ -53,8 +53,10 @@ def download_data(tsv_path, download_column):
 
 			gslink = row[download_column]
 
+			filename = f"{sample_id}_{gslink.str.split("/")[-1]}"
+
 			# make gs command 
-			gs_command = f"gsutil cp {gslink} ./{download_column}/"
+			gs_command = f"gsutil cp {gslink} ./{download_column}/{filename}"
 
 			bash_script.write(f'{gs_command}\n\n')
 
