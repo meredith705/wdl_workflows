@@ -17,8 +17,18 @@ def parse_quast_report(report_path):
             # Each line looks like: "Genome fraction (%)   97.5"
             # split on whitespace
             parts = line.strip().split()
-            key = " ".join(parts[:-1])   
-            value = parts[-1]            
+            key = " ".join(parts[:-1])
+            value = parts[-1] 
+
+            # # unaligned contigs is 1 + 577 part
+            if "# unaligned contigs" in line:
+                
+                key = parts[0] + " " + parts[1] + " " + parts[2]
+                value = " ".join(parts[-4:])
+
+                print('special key', key, value)
+
+                       
 
             metrics[key] = value
 
