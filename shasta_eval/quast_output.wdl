@@ -87,11 +87,11 @@ task quast {
             FEATURE_FILENAME=$(basename -- "~{featuresFile}")
             ln -s ~{featuresFile}
             cmd+=( --features gene:$FEATURE_FILENAME )  ### do we want just genes? 
-
+        fi
 
 
         # include extra arguments if supplied
-        if [[ ! -z "~{extraArguments}" ]] ; then
+        if [[ ! -z "~{extraArguments}" ]]; then
             cmd+=( ~{extraArguments} )
         fi
 
