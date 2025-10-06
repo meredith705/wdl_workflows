@@ -14,7 +14,7 @@ RUN wget https://github.com/ablab/quast/releases/download/quast_5.3.0/quast-5.3.
     rm quast-5.3.0.tar.gz && \
     cd quast-5.3.0 && \
     pip3 install --upgrade pip && \
-    pip3 install --upgrade setuptools==59.6.0 matplotlib==3.3.4 simplejson==3.17.6 joblib==0.14.1 pyparsing==2.4.7 && \
+    pip3 install --upgrade setuptools==59.6.0 matplotlib==3.3.4 simplejson==3.17.6 joblib==0.14.1 pyparsing==2.4.7 pysam==0.19.1 && \
     ./setup.py install && \
     ./quast.py -h
 
