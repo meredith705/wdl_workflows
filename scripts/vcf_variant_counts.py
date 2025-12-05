@@ -108,7 +108,7 @@ def plot_violin_variantType(variant_counts, vcf_prefix):
 	# convert dictionary to long-form DF
 	lfdata = []
 	for svtype, vals in variant_counts.items():
-		print('svtype', len(vals))
+		print(svtype, vals)
 		if len(vals['lengths'])>1:
 			for length in vals['lengths']:
 				lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
