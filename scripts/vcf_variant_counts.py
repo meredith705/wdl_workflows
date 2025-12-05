@@ -68,14 +68,15 @@ def vcfEntriesPerSample(in_vcf):
 	vcf_file.close()
 
 
-	print(f'finished analyzing VCF: {num_records} variants in the file' )
+	vcf_prefix = in_vcf.split(".")[0]
+	print(f'finished analyzing VCF: {num_records} variants in the {vcf_prefix}' )
 	for key, val in svTypes.items():
 		print(key,val['count'])
 
 	# write out the variant counts to a tsv file, including the header column names, but not the index
 	sample_variant_count_df = pd.DataFrame( list(variant_counts.items()), columns=['Sample', 'VariantCount'])
 
-	vcf_prefix = in_vcf.split(".")[0]
+	
 	sample_variant_count_df.to_csv(vcf_prefix+"sample_variant_counts.tsv", header=True, index=False, sep="\t")
 
 
@@ -95,7 +96,7 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 
 	print('type', type(vcf_data))
 	print('len', len(vcf_data))
-	print('shape', vcf_data.shape)
+	print('data', vcf_data)
 	violin_swarm(['samples']*vcf_data.shape[0], 'VariantCount', vcf_data, axs)
 
 	plt.tight_layout()
@@ -168,7 +169,7 @@ if __name__ == "__main__":
 
 	if args.plot_violin_perSample:
 		print('df',type(sample_variant_count_df), sample_variant_count_df.head())
-		plot_violin_perSample(sample_variant_count_df,vcf_prefix)
+		plot_violin_perSample(sample_variant_count_df, vcf_prefix)
 
 	if args.plot_violin_variantType:
 
