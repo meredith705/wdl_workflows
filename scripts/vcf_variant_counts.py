@@ -46,7 +46,13 @@ def vcfEntriesPerSample(in_vcf):
 		# add the SV type to the dictionary and/or increment the count and keep track of the SV length
 		if record.info['SVTYPE'] not in svTypes.keys():
 			if 'SVLEN' not in record.info:
-				svTypes[record.info['SVTYPE']]={'count':1}
+				rel_len = len(record.ref)
+				alt_len = len(record.alt)
+				if alt_len - ref_len == 0:
+					varLen = rel_len
+				else:
+					varLen = 0
+				svTypes[record.info['SVTYPE']]={'count':1,'lengths':varLen}
 			else:
 				svTypes[record.info['SVTYPE']]={'count':1,'lengths':[record.info['SVLEN']]}
 		else:
@@ -110,10 +116,12 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 	# convert dictionary to long-form DF
 	lfdata = []
 	for svtype, vals in svTypes.items():
-		print(svtype, '\nvals:', vals)
+		print(svtype, '\nvals:', vals.keys())
 
-		for length in vals['lengths']:
-			lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
+		if 'lengths' in vals.keys():
+
+			for length in vals['lengths']:
+				lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
 	
 	lfdf = pd.DataFrame(lfdata)
 
