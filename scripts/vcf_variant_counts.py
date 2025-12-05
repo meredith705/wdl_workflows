@@ -47,7 +47,7 @@ def vcfEntriesPerSample(in_vcf):
 		if record.info['SVTYPE'] not in svTypes.keys():
 			if 'SVLEN' not in record.info:
 				rel_len = len(record.ref)
-				alt_len = len(record.alt)
+				alt_len = len(record.alts)
 				if alt_len - ref_len == 0:
 					varLen = rel_len
 				else:
