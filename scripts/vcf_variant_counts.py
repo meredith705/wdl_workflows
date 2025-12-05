@@ -94,12 +94,13 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 	""" set up the figure to plot a violin """
 	fig, axs = plt.subplots(figsize=(8,4))
 
-	print(vcf_data)
-	print(list(vcf_data.items()))
+	print('vcf_data\n',vcf_data)
+	print('list ',list(vcf_data.items()))
+	
 	samples = []
-	for sample, count in vcf_data:
+	for sample, count in vcf_data.items():
 		samples.append({'Sample':sample, 'VariantCount':count})
-		
+
 	# vcf_df = pd.DataFrame(list(vcf_data.items()), columns=['Sample', 'VariantCount'])
 	vcf_df = pd.DataFrame(samples)
 	print('type', type(vcf_df))
