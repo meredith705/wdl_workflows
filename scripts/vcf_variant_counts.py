@@ -92,12 +92,10 @@ def violin_swarm(x,y,data,ax,swarm_pt_size = 3):
 
 def plot_violin_perSample(vcf_data, vcf_prefix):
 	""" set up the figure to plot a violin """
+	print('Plotting sample count violin')
 	fig, axs = plt.subplots(figsize=(8,4))
 
-	# vcf_df = pd.read_csv(vcf_prefix+"_sample_variant_counts.tsv", sep="\t")
-	# print('vcf_df:\n', vcf_df.head())
-
-	violin_swarm(['samples']*vcf_data.shape[0], 'VariantCount', vcf_df, axs)
+	violin_swarm(['samples']*vcf_data.shape[0], 'VariantCount', vcf_data, axs)
 
 	plt.tight_layout()
 	plt.savefig(vcf_prefix+"_sample_variant_counts.png", dpi=300)
@@ -105,6 +103,7 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 
 def plot_violin_variantType(variant_counts, vcf_prefix):
 	""" Plot variant type violin of variant lengths """
+	print('Plotting variant type violin')
 
 	# convert dictionary to long-form DF
 	lfdata = []
@@ -173,5 +172,7 @@ if __name__ == "__main__":
 	if args.plot_violin_variantType:
 
 		plot_violin_variantType(variant_counts,vcf_prefix)	
+
+	print('\nDone!\n')
 
 
