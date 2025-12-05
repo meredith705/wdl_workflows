@@ -100,7 +100,7 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 	violin_swarm(['samples']*vcf_df.shape[0], 'VariantCount', vcf_df, axs)
 
 	plt.tight_layout()
-	plt.savefig(vcf_prefix+"sample_variant_counts.png", dpi=300)
+	plt.savefig(vcf_prefix+"_sample_variant_counts.png", dpi=300)
 
 
 def plot_violin_variantType(variant_counts, vcf_prefix):
@@ -121,7 +121,7 @@ def plot_violin_variantType(variant_counts, vcf_prefix):
 	plt.title("SV Length Distributino per SV Type")
 	plt.xlabel("SVTYPE")
 	plt.ylabel("SVLEN")
-	ptl.savefig(vcf_prefix+"variant_counts_lengths.png", dpi=300)
+	ptl.savefig(vcf_prefix+"_variant_counts_lengths.png", dpi=300)
 
 
 
