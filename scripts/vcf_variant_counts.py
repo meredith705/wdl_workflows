@@ -105,18 +105,16 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 	""" Plot variant type violin of variant lengths """
 	print('Plotting variant type violin')
 
-	
+
 
 	# convert dictionary to long-form DF
 	lfdata = []
 	for svtype, vals in svTypes.items():
-		print(svtype, vals)
-		if len(vals['lengths'])>1:
-			for length in vals['lengths']:
-				lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
-		else:
-			lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
+		print(svtype, '\nvals:', vals.keys())
 
+		for length in vals['lengths']:
+			lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
+	
 	lfdf = pd.DataFrame(lfdata)
 
 	fig, axs = plt.subplots(figsize(8,4))
