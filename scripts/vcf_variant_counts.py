@@ -48,11 +48,11 @@ def vcfEntriesPerSample(in_vcf):
 			if 'SVLEN' not in record.info:
 				svTypes[record.info['SVTYPE']]={'count':1}
 			else:
-				svTypes[record.info['SVTYPE']]={'count':1,'lenghts':[record.info['SVLEN']]}
+				svTypes[record.info['SVTYPE']]={'count':1,'lengths':[record.info['SVLEN']]}
 		else:
 			svTypes[record.info['SVTYPE']]['count'] += 1
 			if 'SVLEN' in record.info:
-				svTypes[record.info['SVTYPE']]['lenghts'].append(record.info['SVLEN'])
+				svTypes[record.info['SVTYPE']]['lengths'].append(record.info['SVLEN'])
 
 		# for each sample entry in the vcf record add up the alleles ( 1's )
 		for sample, data in record.samples.items():
@@ -110,7 +110,7 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 	# convert dictionary to long-form DF
 	lfdata = []
 	for svtype, vals in svTypes.items():
-		print(svtype, '\nvals:', vals.keys())
+		print(svtype, '\nvals:', vals)
 
 		for length in vals['lengths']:
 			lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
