@@ -164,7 +164,7 @@ if __name__ == "__main__":
 	vcf_prefix = args.in_vcf_file.split(".")[0]
 
 	if args.plot_violin_perSample:
-
+		print('df', sample_variant_count_df.head())
 		plot_violin_perSample(sample_variant_count_df,vcf_prefix)
 
 	if args.plot_violin_variantType:
