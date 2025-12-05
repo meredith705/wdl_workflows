@@ -106,7 +106,7 @@ def plot_violin_variantType(variant_counts, vcf_prefix):
 	lfdata = []
 	for svtype, vals in variant_counts.items():
 		for length in vals['lengths']:
-			lfdata.append({'SVTYPE'}:svtype, 'SVLEN', length)
+			lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
 
 	lfdf = pd.DataFrame(lfdata)
 
