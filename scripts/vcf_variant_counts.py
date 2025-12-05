@@ -45,10 +45,14 @@ def vcfEntriesPerSample(in_vcf):
 
 		# add the SV type to the dictionary and/or increment the count and keep track of the SV length
 		if record.info['SVTYPE'] not in svTypes.keys():
-			svTypes[record.info['SVTYPE']]={'count':1,'lenghts':[record.info['SVLEN']]}
+			if 'SVLEN' not in record.info:
+				svTypes[record.info['SVTYPE']]={'count':1}
+			else:
+				svTypes[record.info['SVTYPE']]={'count':1,'lenghts':[record.info['SVLEN']]}
 		else:
 			svTypes[record.info['SVTYPE']]['count'] += 1
-			svTypes[record.info['SVTYPE']]['lenghts'].append(record.info['SVLEN'])
+			if 'SVLEN' in record.info:
+				svTypes[record.info['SVTYPE']]['lenghts'].append(record.info['SVLEN'])
 
 		# for each sample entry in the vcf record add up the alleles ( 1's )
 		for sample, data in record.samples.items():
