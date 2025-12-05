@@ -93,6 +93,9 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 	""" set up the figure to plot a violin """
 	fig, axs = plt.subplots(figsize=(8,4))
 
+	print('type', type(vcf_data))
+	print('len', len(vcf_data))
+	print('shape', vcf_data.shape)
 	violin_swarm(['samples']*vcf_data.shape[0], 'VariantCount', vcf_data, axs)
 
 	plt.tight_layout()
