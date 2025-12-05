@@ -77,7 +77,7 @@ def vcfEntriesPerSample(in_vcf):
 	sample_variant_count_df = pd.DataFrame( list(variant_counts.items()), columns=['Sample', 'VariantCount'])
 
 	
-	sample_variant_count_df.to_csv(vcf_prefix+"sample_variant_counts.tsv", header=True, index=False, sep="\t")
+	sample_variant_count_df.to_csv(vcf_prefix+"_sample_variant_counts.tsv", header=True, index=False, sep="\t")
 
 
 	# return the variant count dataframe to main
@@ -94,18 +94,9 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 	""" set up the figure to plot a violin """
 	fig, axs = plt.subplots(figsize=(8,4))
 
-	print('vcf_data\n',vcf_data)
-	print('list ',list(vcf_data.items()))
-	
-	samples = []
-	for sample, count in vcf_data.items():
-		samples.append({'Sample':sample, 'VariantCount':count})
+	vcf_df = pd.read_csv(vcf_prefix+"_sample_variant_counts.tsv", sep="\t")
+	print('vcf_df:\n', vcf_df.head())
 
-	# vcf_df = pd.DataFrame(list(vcf_data.items()), columns=['Sample', 'VariantCount'])
-	vcf_df = pd.DataFrame(samples)
-	print('type', type(vcf_df))
-	print('len', len(vcf_df))
-	print('data', vcf_df)
 	violin_swarm(['samples']*vcf_df.shape[0], 'VariantCount', vcf_df, axs)
 
 	plt.tight_layout()
@@ -177,7 +168,6 @@ if __name__ == "__main__":
 	vcf_prefix = args.in_vcf_file.split(".")[0]
 
 	if args.plot_violin_perSample:
-		print('df',type(sample_variant_count_df), sample_variant_count_df.head())
 		plot_violin_perSample(sample_variant_count_df, vcf_prefix)
 
 	if args.plot_violin_variantType:
