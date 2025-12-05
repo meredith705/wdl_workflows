@@ -46,7 +46,7 @@ def vcfEntriesPerSample(in_vcf):
 		# add the SV type to the dictionary and/or increment the count and keep track of the SV length
 		if record.info['SVTYPE'] not in svTypes.keys():
 			if 'SVLEN' not in record.info:
-				rel_len = len(record.ref)
+				ref_len = len(record.ref)
 				alt_len = len(record.alts)
 				if alt_len - ref_len == 0:
 					varLen = rel_len
