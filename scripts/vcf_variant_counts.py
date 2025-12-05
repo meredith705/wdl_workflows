@@ -81,7 +81,7 @@ def vcfEntriesPerSample(in_vcf):
 
 
 	# return the variant count dataframe to main
-	return sample_variant_count_df, variant_counts
+	return sample_variant_count_df, svTypes
 
 def violin_swarm(x,y,data,ax,swarm_pt_size = 3):
 	""" make a violin plot with a swarm of datapoints on top """
@@ -101,13 +101,15 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 	plt.savefig(vcf_prefix+"_sample_variant_counts.png", dpi=300)
 
 
-def plot_violin_variantType(variant_counts, vcf_prefix):
+def plot_violin_variantType(svTypes, vcf_prefix):
 	""" Plot variant type violin of variant lengths """
 	print('Plotting variant type violin')
 
+	
+
 	# convert dictionary to long-form DF
 	lfdata = []
-	for svtype, vals in variant_counts.items():
+	for svtype, vals in svTypes.items():
 		print(svtype, vals)
 		if len(vals['lengths'])>1:
 			for length in vals['lengths']:
@@ -165,7 +167,7 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	# Process the VCF file
-	sample_variant_count_df, variant_counts = vcfEntriesPerSample(args.in_vcf_file)
+	sample_variant_count_df, svTypes = vcfEntriesPerSample(args.in_vcf_file)
 
 	#vcf prefix
 	vcf_prefix = args.in_vcf_file.split(".")[0]
@@ -175,7 +177,7 @@ if __name__ == "__main__":
 
 	if args.plot_violin_variantType:
 
-		plot_violin_variantType(variant_counts,vcf_prefix)	
+		plot_violin_variantType(svTypes,vcf_prefix)	
 
 	print('\nDone!\n')
 
