@@ -73,7 +73,7 @@ def vcfEntriesPerSample(in_vcf):
 		print(key,val['count'])
 
 	# write out the variant counts to a tsv file, including the header column names, but not the index
-	sample_variant_count_df = pd.DataFrame( list(variant_counts.items()), columns=['Sample', 'VarintCount'])
+	sample_variant_count_df = pd.DataFrame( list(variant_counts.items()), columns=['Sample', 'VariantCount'])
 
 	vcf_prefix = in_vcf.split(".")[0]
 	sample_variant_count_df.to_csv(vcf_prefix+"sample_variant_counts.tsv", header=True, index=False, sep="\t")
