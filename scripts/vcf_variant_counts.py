@@ -135,7 +135,7 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 	
 	lfdf = pd.DataFrame(lfdata)
 
-	fig, axs = plt.subplots(figsize(8,4))
+	fig, axs = plt.subplots(figsize=(8,4))
 
 	violin_swarm('SVTYPE', 'SVLEN', lfdf, axs)
 
