@@ -59,6 +59,14 @@ def vcfEntriesPerSample(in_vcf):
 			svTypes[record.info['SVTYPE']]['count'] += 1
 			if 'SVLEN' in record.info:
 				svTypes[record.info['SVTYPE']]['lengths'].append(record.info['SVLEN'])
+			else:
+				ref_len = len(record.ref)
+				alt_len = len(record.alts)
+				if alt_len - ref_len == 0:
+					varLen = ref_len
+				else:
+					varLen = 0
+				svTypes[record.info['SVTYPE']]['lengths'].append(varLen)
 
 		# for each sample entry in the vcf record add up the alleles ( 1's )
 		for sample, data in record.samples.items():
@@ -119,9 +127,11 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 		print(svtype, '\nvals:', vals.keys())
 
 		if 'lengths' in vals.keys():
-
-			for length in vals['lengths']:
-				lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
+			if len(vals['lengths'])>1:
+				for length in vals['lengths']:
+					lfdata.append({'SVTYPE':svtype, 'SVLEN':length})
+			else:
+				lfdata.append({'SVTYPE':svtype, 'SVLEN':vals['lengths']})
 	
 	lfdf = pd.DataFrame(lfdata)
 
