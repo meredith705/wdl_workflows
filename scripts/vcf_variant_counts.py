@@ -52,7 +52,7 @@ def vcfEntriesPerSample(in_vcf):
 					varLen = ref_len
 				else:
 					varLen = 0
-				svTypes[record.info['SVTYPE']]={'count':1,'lengths':varLen}
+				svTypes[record.info['SVTYPE']]={'count':1,'lengths':[varLen]}
 			else:
 				svTypes[record.info['SVTYPE']]={'count':1,'lengths':[record.info['SVLEN']]}
 		else:
