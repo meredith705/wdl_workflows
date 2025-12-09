@@ -151,7 +151,7 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 	plt.title("SV Length Distributino per SV Type")
 	plt.xlabel("SVTYPE")
 	plt.ylabel("SVLEN")
-	ptl.savefig(vcf_prefix+"_variant_counts_lengths.png", dpi=300)
+	plt.savefig(vcf_prefix+"_variant_counts_lengths.png", dpi=300)
 
 
 
