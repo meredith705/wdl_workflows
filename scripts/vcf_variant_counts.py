@@ -18,17 +18,19 @@ import datetime
 	02/2025
 """
 
+labelsize=24
+ticksize=20
+
 sns.set(
     rc={
-        "xtick.labelsize": 16,
-        "ytick.labelsize": 16,
-        "axes.labelsize": 18,
-        "axes.titlesize": 18
+        "xtick.labelsize": labelsize,
+        "ytick.labelsize": labelsize,
+        "axes.labelsize": labelsize,
+        "axes.titlesize": ticksize
     }
 )
 
-labelsize=24
-ticksize=20
+
 
 def vcfEntriesPerSample(in_vcf):
 	"""
@@ -230,6 +232,8 @@ if __name__ == "__main__":
 
 	if args.writeOutvariantTypes:
 		svTypesDf = pd.DataFrame( [ (k,v['count']) for k,v in svTypes.items() ], columns=['type','count'] )
+		totalVars = svTypesDf['count'].sum()
+		svTypesDf.loc[len(svTypes)] = ['Total',totalVars]
 		svTypesDf.to_csv(vcf_prefix+"_variantType_df.tsv", header=True, index=False, sep="\t")
 
 	print('\nDone!\n')
