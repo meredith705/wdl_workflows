@@ -18,6 +18,15 @@ import datetime
 	02/2025
 """
 
+sns.set(
+    rc={
+        "xtick.labelsize": 14,
+        "ytick.labelsize": 14,
+        "axes.labelsize": 16,
+        "axes.titlesize": 18
+    }
+)
+
 def vcfEntriesPerSample(in_vcf):
 	"""
 	Function that takes in a vcf with multiple samples and counts up genotypes of vcf entries per sample
