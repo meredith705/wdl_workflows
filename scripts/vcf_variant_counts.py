@@ -131,8 +131,6 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 	# convert dictionary to long-form DF
 	lfdata = []
 	for svtype, vals in svTypes.items():
-		print(svtype, '\nvals:', vals.keys(), len(vals['lengths']) )
-
 		if 'lengths' in vals.keys():
 			if len(vals['lengths'])>1:
 				for length in vals['lengths']:
@@ -210,7 +208,7 @@ if __name__ == "__main__":
 
 		plot_violin_variantType(svTypes,vcf_prefix)	
 
-	if arts.writeOutvariantTypes:
+	if args.writeOutvariantTypes:
 		svTypesDf = pd.DataFrame.from_dict(svTypes, orient='index')
 		svTypesDf.to_csv(vcf_prefix+"_variantType_df.tsv", header=True, index=False, sep="\t")
 
