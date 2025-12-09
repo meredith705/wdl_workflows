@@ -184,6 +184,12 @@ if __name__ == "__main__":
 		help='make a violin plot of the number of variants types for a single sample'
 	)
 
+	parser.add_argument(
+		'--writeOutvariantTypes', 
+		action='store_true', 
+		help='write out variants types for a single sample'
+	)
+
 	if len(sys.argv) == 0:
 		parser.print_help(sys.stderr)
 		sys.exit(1)
@@ -203,6 +209,10 @@ if __name__ == "__main__":
 	if args.plot_violin_variantType:
 
 		plot_violin_variantType(svTypes,vcf_prefix)	
+
+	if arts.writeOutvariantTypes:
+		svTypesDf = pd.DataFrame.from_dict(svTypes, orient='index')
+		svTypesDf.to_csv(vcf_prefix+"_variantType_df.tsv", header=True, index=False, sep="\t")
 
 	print('\nDone!\n')
 
