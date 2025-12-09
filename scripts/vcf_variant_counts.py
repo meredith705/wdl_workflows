@@ -129,8 +129,8 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 
 	plt.xticks(fontsize=16)
 	plt.yticks(fontsize=16)
-	axs.set_xlabel('sample',foltsize=18)
-	axs.set_ylabel('variantCount',foltsize=18)
+	axs.set_xlabel('sample',fontsize=18)
+	axs.set_ylabel('variantCount',fontsize=18)
 
 	plt.tight_layout()
 	plt.savefig(vcf_prefix+"_sample_variant_counts.png", dpi=300)
@@ -160,9 +160,9 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 
 	violin_swarm('SVTYPE', 'SVLEN', lfdf, axs)
 
-	plt.title("SV Length Distributino per SV Type",foltsize=18)
-	plt.xlabel("SVTYPE",foltsize=18)
-	plt.ylabel("SVLEN",foltsize=18)
+	plt.title("SV Length Distributino per SV Type",fontsize=18)
+	plt.xlabel("SVTYPE",fontsize=18)
+	plt.ylabel("SVLEN",fontsize=18)
 	plt.xticks(fontsize=16)
 	plt.yticks(fontsize=16)
 	plt.savefig(vcf_prefix+"_variant_counts_lengths.png", dpi=300)
