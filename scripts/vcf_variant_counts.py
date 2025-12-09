@@ -101,7 +101,14 @@ def violin_swarm(x,y,data,ax,swarm_pt_size = 3):
 	""" make a violin plot with a swarm of datapoints on top """
 
 	sns.violinplot(x=x, y=y, data=data, cut=0.25, inner="quartile", alpha = 0.05, ax=ax, edgecolor='black')
-	sns.swarmplot(x=x, y=y, data=data, s=swarm_pt_size, alpha=1, ax=ax, color='black')
+	# sns.swarmplot(x=x, y=y, data=data, s=swarm_pt_size, alpha=1, ax=ax, color='black')
+	sns.stripplot(
+	    data=data,
+	    x=x,
+	    y=y,
+	    jitter=True,   # random jitter
+	    size=2, ax=ax, color='black'
+)
 
 
 def plot_violin_perSample(vcf_data, vcf_prefix):
