@@ -60,9 +60,9 @@ def download_data(tsv_path, download_column, use_sample_in_filename):
 				gsfilename = gslink.split("/")[-1]
 				filename = f"{sample_id}_{gsfilename}"
 				# make gs command with sample id filename
-				gs_command = f"gsutil cp {gslink} ./{download_column}/{filename}"
+				gs_command = f"gsutil -m cp {gslink} ./{download_column}/{filename}"
 			else:
-				gs_command = f"gsutil cp {gslink} ./{download_column}/" 
+				gs_command = f"gsutil -m cp {gslink} ./{download_column}/" 
 			
 
 			bash_script.write(f'{gs_command}\n\n')

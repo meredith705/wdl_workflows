@@ -17,16 +17,42 @@ def parse_quast_report(report_path):
             # Each line looks like: "Genome fraction (%)   97.5"
             # split on whitespace
             parts = line.strip().split()
-            key = " ".join(parts[:-1])
-            value = parts[-1] 
+
+            if len(parts)>2:
+                asm_names = ["hapdup_dual_1", "hapdup_dual_2"]
+            else:
+                asm_names = ["hapdup_dual_1"]
+
+            # quast can have 2 assembly columns now 
+            key = " ".join(parts[:-2]) if len(parts) > 2 else parts[0]
+            #key = " ".join(parts[:-1])
+            
+            # store values for 2 assemblies
+            if len(asm_names) ==1:
+                value = parts[-1] 
+            else: 
+                value1 = parts[-2]
+                value2 = parts[-1]
 
             # # unaligned contigs is 1 + 577 part
-            if "# unaligned contigs" in line:
-                
+            if ("# unaligned contigs" in line) or ( "# genomic features" in line ):
+                print(line)
+                # store key as the first space separated parts of the line 
                 key = parts[0] + " " + parts[1] + " " + parts[2]
-                value = " ".join(parts[-4:])
+
+                # for quast reports with just one assembly store one value set
+                if len(asm_names) ==1:
+                    value = " ".join(parts[-4:])
+                else:
+                    # for 2 assemblies store asm1 and asm2 value sets
+                    value1 = " ".join(parts[3:-4])
+                    value2 = " ".join(parts[-4:])
            
-            metrics[key] = value
+            if len(asm_names) ==1:
+                metrics[key] = value
+            else: 
+                metrics[key+"_"+asm_names[0]] = value1
+                metrics[key+"_"+asm_names[1]] = value2
 
     return metrics
 
