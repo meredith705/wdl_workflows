@@ -209,7 +209,7 @@ if __name__ == "__main__":
 		plot_violin_variantType(svTypes,vcf_prefix)	
 
 	if args.writeOutvariantTypes:
-		svTypesDf = pd.DataFrame.from_dict(svTypes, orient='index')
+		svTypesDf = pd.DataFrame( [ (k,v['count']) for k,v in svTypes.items() ], columns=['type','count'] )
 		svTypesDf.to_csv(vcf_prefix+"_variantType_df.tsv", header=True, index=False, sep="\t")
 
 	print('\nDone!\n')
