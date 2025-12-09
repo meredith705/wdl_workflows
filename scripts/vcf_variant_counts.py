@@ -27,6 +27,9 @@ sns.set(
     }
 )
 
+labelsize=24
+ticksize=20
+
 def vcfEntriesPerSample(in_vcf):
 	"""
 	Function that takes in a vcf with multiple samples and counts up genotypes of vcf entries per sample
@@ -127,10 +130,10 @@ def plot_violin_perSample(vcf_data, vcf_prefix):
 
 	violin_swarm(['samples']*vcf_data.shape[0], 'VariantCount', vcf_data, axs)
 
-	plt.xticks(fontsize=16)
-	plt.yticks(fontsize=16)
-	axs.set_xlabel('sample',fontsize=18)
-	axs.set_ylabel('variantCount',fontsize=18)
+	plt.xticks(fontsize=ticksize)
+	plt.yticks(fontsize=ticksize)
+	axs.set_xlabel('sample',fontsize=labelsize)
+	axs.set_ylabel('variantCount',fontsize=labelsize)
 
 	plt.tight_layout()
 	plt.savefig(vcf_prefix+"_sample_variant_counts.png", dpi=300)
@@ -160,11 +163,12 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 
 	violin_swarm('SVTYPE', 'SVLEN', lfdf, axs)
 
-	plt.title("SV Length Distributino per SV Type",fontsize=18)
-	plt.xlabel("SVTYPE",fontsize=18)
-	plt.ylabel("SVLEN",fontsize=18)
-	plt.xticks(fontsize=16)
-	plt.yticks(fontsize=16)
+
+	plt.title("SV Length Distributino per SV Type",fontsize=labelsize)
+	plt.xlabel("SVTYPE",fontsize=labelsize)
+	plt.ylabel("SVLEN",fontsize=labelsize)
+	plt.xticks(fontsize=ticksize)
+	plt.yticks(fontsize=ticksize)
 	plt.savefig(vcf_prefix+"_variant_counts_lengths.png", dpi=300)
 
 
