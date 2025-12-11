@@ -34,7 +34,7 @@ def plot_data(df):
       Panel 2: FP vs FN
       Panel 3: precision vs recall
     """
-    figsize=(14, 12)
+    figsize=(12, 12)
 
     sns.set(style="whitegrid")
 
@@ -71,8 +71,8 @@ def plot_data(df):
         edgecolor="k"
     )
     axs[1].set_title("FP vs FN")
-    axs[1].set_xlabel("FP")
-    axs[1].set_ylabel("FN")
+    axs[1].set_xlabel("Shasta only SVs")
+    axs[1].set_ylabel("Hifiasm only SVs")
 
     for _, r in df.iterrows():
         axs[1].text(r["FP"], r["FN"], r["sample"], fontsize=9)
@@ -117,7 +117,7 @@ def load_jsons(dirs):
         with open(json_path) as f:
             data = json.load(f)
 
-        print(json.dumps(data, indent=4))
+        # print(json.dumps(data, indent=4))
 
         # get TP-base, TP-comp, FP, FN, precision, recall, f1
         metrics = {}
