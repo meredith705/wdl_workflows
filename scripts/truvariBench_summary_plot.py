@@ -96,7 +96,7 @@ def plot_data(df):
         axs[2].text(r["precision"], r["recall"], r["sample"], fontsize=9)
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"RUSH_truvariBench_summary.png",dpi=300, facecolor='white', transparent=False)
 
 
 
