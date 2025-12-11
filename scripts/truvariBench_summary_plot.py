@@ -34,7 +34,7 @@ def plot_data(df):
       Panel 2: FP vs FN
       Panel 3: precision vs recall
     """
-    figsize=(10, 12)
+    figsize=(8, 12)
 
     sns.set(style="whitegrid")
 
