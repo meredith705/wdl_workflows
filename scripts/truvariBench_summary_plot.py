@@ -97,7 +97,7 @@ def count_bps_fn_fp(dirs):
 
         hifiasm_ins, hifiasm_del = sum_ins_del(hifiasmOnly)
 
-        rows.append({
+        indel_len_list.append({
             "sample": sample,
             "assembler": "shasta",
             "ins_bp": shasta_ins,
@@ -105,7 +105,7 @@ def count_bps_fn_fp(dirs):
             "total_bp": shasta_ins + shasta_del
         })
 
-        rows.append({
+        indel_len_list.append({
             "sample": sample,
             "assembler": "hifiasm",
             "ins_bp": hifiasm_ins,
@@ -113,7 +113,7 @@ def count_bps_fn_fp(dirs):
             "total_bp": hifiasm_ins + hifiasm_del
         })
 
-        df = pd.DataFrame(rows)
+        df = pd.DataFrame(indel_len_list)
 
         plot_total_bp(df)
 
