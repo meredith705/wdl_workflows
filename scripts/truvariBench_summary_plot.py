@@ -81,7 +81,7 @@ def count_bps_fn_fp(dirs):
     indel_len_list = []
 
     for d in dirs:
-
+        print('d',d)
         sample = "RUSH_"+Path(d).name.split("_")[1]
 
         shastaOnly = Path(d) / "fp.vcf.gz"
