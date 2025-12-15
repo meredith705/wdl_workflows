@@ -25,6 +25,99 @@ sns.set(
     }
 )
 
+def plot_total_bp(df):
+    sns.set(style="whitegrid")
+
+    plt.figure(figsize=(10,6))
+    sns.barplot(
+        data=df,
+        x="sample",
+        y="total_bp",
+        hue="assembler",
+        palette="Set2",
+        edgecolor="k"
+    )
+
+    plt.ylabel("Total bp (INS + DEL)")
+    plt.title("Total inserted + deleted bp per assembler")
+    plt.tight_layout()
+    plt.show()
+
+def open_vcf(path):
+    if str(path).endswith(".gz"):
+        return gzip.open(path, "rt")
+    return open(path, "r")
+
+def sum_ins_del(vcf_path):
+    total_ins = 0
+    total_del = 0
+
+    with open_vcf(vcf_path) as f:
+        for line in f:
+            if line.startswith("#"):
+                continue
+
+            fields = line.strip().split("\t")
+            ref = fields[3]
+            alts = fields[4].split(",")
+
+            for alt in alts:
+                # skip symbolic calls like <INS>, <DEL>, <DUP>, etc
+                if alt.startswith("<") and alt.endswith(">"):
+                    continue
+
+                # compute length delta
+                d = len(alt) - len(ref)
+
+                if d > 0:
+                    total_ins += d
+                elif d < 0:
+                    total_del += abs(d)
+
+    return total_ins, total_del
+
+def count_bps_fn_fp(dirs):
+
+    indel_len_list = []
+
+    for d in dirs:
+
+        sample = "RUSH_"+Path(d).name.split("_")[1]
+
+        shastaOnly = Path(d) / "fp.vcf.gz"
+        if not shastaOnly.exists():
+            continue
+
+        shasta_ins, shasta_del = sum_ins_del(shastaOnly)
+
+        hifiasmOnly = Path(d) / "fn.vcf.gz"
+        if not hifiasmOnly.exists():
+            continue
+
+        hifiasm_ins, hifiasm_del = sum_ins_del(hifiasmOnly)
+
+        rows.append({
+            "sample": sample,
+            "assembler": "shasta",
+            "ins_bp": shasta_ins,
+            "del_bp": shasta_del,
+            "total_bp": shasta_ins + shasta_del
+        })
+
+        rows.append({
+            "sample": sample,
+            "assembler": "hifiasm",
+            "ins_bp": hifiasm_ins,
+            "del_bp": hifiasm_del,
+            "total_bp": hifiasm_ins + hifiasm_del
+        })
+
+        df = pd.DataFrame(rows)
+
+        plot_total_bp(df)
+
+
+
 def plot_data(df):
     """ FN: hifiasm only
         FP: shasta only. 
@@ -104,9 +197,6 @@ def plot_data(df):
 def load_jsons(dirs):
 
 
-    # fix this to plot from dirs 
-    # dirs = ["path/to/dir1", "path/to/dir2"]  # directories with summary.json
-
     metrics_list = []
 
     for d in dirs:
@@ -142,6 +232,7 @@ def load_jsons(dirs):
     df_metrics = pd.DataFrame(metrics_list)
 
     print(df_metrics.head())
+    df_metrics.to_csv("RUSH_HifiasmShasta_truvariBench_summary.csv")
 
     plot_data(df_metrics)
 
@@ -158,23 +249,10 @@ if __name__ == "__main__":
         help="List of directories containing summary.json files"
     )
 
-    # parser.add_argument(
-    #     "-f","--hifiasm_count_tsv",
-    #     type=str,
-    #     required=True,
-    #     help="Path to the input file to be plotted."
-    # )
-
-
-    # parser.add_argument(
-    #     "-o","--output_directory",
-    #     type=str,
-    #     required=True,
-    #     help="Path to the input qtl tsv to be analyzed."
-    # )
-
     args = parser.parse_args()
 
     load_jsons(args.dirs)
+
+    count_bps_fn_fp(str(args.dirs))
 
 

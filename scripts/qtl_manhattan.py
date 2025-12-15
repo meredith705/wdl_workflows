@@ -158,7 +158,7 @@ def plot_volcano(df, prefix, directory_path, pval, alpha=0.3):
     df_sorted = df.sort_values(by='size', ascending=True) 
 
     sns.scatterplot(x='slope', y=pval, data=df_sorted, color='#B3B3B3', s=16, ax=axs)
-    sns.scatterplot(x='slope', y=pval, data=df_sorted.loc[(df_sorted['size']>20) | (df_sorted['size']<-20)], hue='size', edgecolor='k', alpha=0.6, s=18, ax=axs, palette='coolwarm')
+    sns.scatterplot(x='slope', y=pval, data=df_sorted.loc[(df_sorted['size']>20) | (df_sorted['size']<-20)], hue='size', edgecolor='k', alpha=0.7, s=18, ax=axs, palette='viridis')
     # bh_num_sig = df.loc[(df['bh_corrected_P_Value_Age']<alpha)].shape[0]
     axs.axhline(y=-np.log10(alpha), color='red', label=f'FDR={alpha}')
 
