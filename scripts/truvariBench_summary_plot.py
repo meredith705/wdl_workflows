@@ -98,7 +98,7 @@ def count_bps_fn_fp(dirs):
         if not hifiasmOnly.exists():
             continue
 
-        if sample == "RUSH_HG002_PPMI":
+        if sample == "RUSH_HG002.PPMI":
             # this one was run with shasta as base instead so swap fp/fn s
             tmp = hifiasmOnly
             hifiasmOnly = shastaOnly
