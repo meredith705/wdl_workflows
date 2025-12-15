@@ -42,7 +42,8 @@ def plot_total_bp(df):
     plt.ylabel("Total bp (INS + DEL)")
     plt.title("Total inserted + deleted bp per assembler")
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"RUSH_INSDEL_length_hifiasmShasta.png",dpi=300, facecolor='white', transparent=False)
+
 
 def open_vcf(path):
     if str(path).endswith(".gz"):
