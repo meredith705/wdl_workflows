@@ -234,7 +234,7 @@ def load_jsons(dirs):
     df_metrics = pd.DataFrame(metrics_list)
 
     print(df_metrics.head())
-    df_metrics.to_csv("RUSH_HifiasmShasta_truvariBench_summary.csv")
+    df_metrics.to_csv("RUSH_HifiasmShasta_truvariBench_summary.csv", index=False, header=True)
 
     plot_data(df_metrics)
 
