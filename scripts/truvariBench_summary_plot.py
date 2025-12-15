@@ -83,19 +83,28 @@ def count_bps_fn_fp(dirs):
     indel_len_list = []
 
     for d in dirs:
-        print(d)
+        print(Path(d).name.split("_")[1])
         sample = "RUSH_"+Path(d).name.split("_")[1]
+
+        
 
         shastaOnly = Path(d) / "fp.vcf.gz"
         if not shastaOnly.exists():
             continue
 
-        shasta_ins, shasta_del = sum_ins_del(shastaOnly)
+        
 
         hifiasmOnly = Path(d) / "fn.vcf.gz"
         if not hifiasmOnly.exists():
             continue
 
+        if sample == "RUSH_HG002_PPMI":
+            # this one was run with shasta as base instead so swap fp/fn s
+            tmp = hifiasmOnly
+            hifiasmOnly = shastaOnly
+            shastaOnly = tmp
+
+        shasta_ins, shasta_del = sum_ins_del(shastaOnly)
         hifiasm_ins, hifiasm_del = sum_ins_del(hifiasmOnly)
 
         indel_len_list.append({
