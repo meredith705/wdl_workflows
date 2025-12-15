@@ -10,6 +10,7 @@ import seaborn as sns
 import datetime
 import json
 from pathlib import Path
+import gzip
 
 labelsize=10
 ticksize=9
