@@ -39,7 +39,8 @@ def plot_total_bp(df):
         edgecolor="k"
     )
 
-    plt.ylabel("Total bp (INS + DEL)")
+    plt.xlabel("Total bp (INS + DEL)")
+    plt.ylabel("Sample")
     plt.title("Total inserted + deleted bp per assembler")
     plt.tight_layout()
     plt.savefig(f"RUSH_INSDEL_length_hifiasmShasta.png",dpi=300, facecolor='white', transparent=False)
