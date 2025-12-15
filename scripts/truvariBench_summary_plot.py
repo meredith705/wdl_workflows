@@ -27,6 +27,7 @@ sns.set(
 )
 
 def plot_total_bp(df):
+    print("plot total bps")
     sns.set(style="whitegrid")
 
     plt.figure(figsize=(10,6))
@@ -84,7 +85,7 @@ def count_bps_fn_fp(dirs):
     indel_len_list = []
 
     for d in dirs:
-        print(Path(d).name.split("_")[1])
+
         sample = "RUSH_"+Path(d).name.split("_")[1]
 
         
