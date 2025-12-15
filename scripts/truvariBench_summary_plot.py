@@ -125,9 +125,9 @@ def count_bps_fn_fp(dirs):
             "total_bp": hifiasm_ins + hifiasm_del
         })
 
-        df = pd.DataFrame(indel_len_list)
+    df = pd.DataFrame(indel_len_list)
 
-        plot_total_bp(df)
+    plot_total_bp(df)
 
 
 
