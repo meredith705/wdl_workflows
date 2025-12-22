@@ -139,19 +139,6 @@ if __name__ == "__main__":
         help="Path to the input qtl tsv to be analyzed."
     )
 
-    # parser.add_argument(
-    #     "-f","--pval_field",
-    #     type=str,
-    #     default="bh_fdr",
-    #     help="Path to the input qtl tsv to be analyzed."
-    # )
-
-    # parser.add_argument(
-    #     '--vertical', 
-    #     action='store_true', 
-    #     help='Turn manhttan vertical'
-    # )
-
 
     args = parser.parse_args()
 
@@ -179,16 +166,4 @@ if __name__ == "__main__":
     plot_barchart(df)
 
 
-    # qtl_df = pd.read_csv(args.in_qtl_tsv, sep="\t")
-
-    # 'variant_id'
-    # chr1_806320_806320_INS_102
-    # chr1:986336:C:A
-    # qtl_df[['chrom','start','end_ref','type_alt','size']] = qtl_df['variant_id'].str.split(r'[_:]', expand=True)  
-    # qtl_df['log10p'] = -np.log10(qtl_df[args.pval_field])  
-
-    # print(qtl_df.shape )
-    # prefix = args.in_qtl_tsv.split(".")[0]
-    # # manhattan_plot(qtl_df, args.cohort, args.output_directory, prefix, 'log10p', args.vertical )
-
-    # plot_volcano(qtl_df, prefix, args.output_directory, 'log10p', alpha=0.3)
+    
