@@ -229,7 +229,7 @@ if __name__ == "__main__":
 
     print(qtl_df.shape )
     prefix = args.in_qtl_tsv.split(".")[0]
-    # manhattan_plot(qtl_df, args.cohort, args.output_directory, prefix, 'log10p', args.vertical )
+    manhattan_plot(qtl_df, args.cohort, args.output_directory, prefix, 'log10p', args.vertical )
 
     plot_volcano(qtl_df, prefix, args.output_directory, 'log10p', alpha=0.3)
 
