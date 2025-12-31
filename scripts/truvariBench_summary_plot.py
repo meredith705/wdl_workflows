@@ -131,7 +131,7 @@ def count_bps_fn_fp(dirs, cohort):
 
 
 
-def plot_data(df):
+def plot_data(df, cohort):
     """ FN: hifiasm only
         FP: shasta only. 
         Hifiasm is base, so FN: hifiasm only and FP: shasta only.
