@@ -26,7 +26,7 @@ sns.set(
     }
 )
 
-def plot_total_bp(df):
+def plot_total_bp(df, cohort):
     print("plot total bps")
     sns.set(style="whitegrid")
 
@@ -44,7 +44,7 @@ def plot_total_bp(df):
     plt.ylabel("Sample")
     plt.title("Total inserted + deleted bp per assembler")
     plt.tight_layout()
-    plt.savefig(f"RUSH_INSDEL_length_hifiasmShasta.png",dpi=300, facecolor='white', transparent=False)
+    plt.savefig(f"{cohort}_INSDEL_length_hifiasmShasta.png",dpi=300, facecolor='white', transparent=False)
 
 
 def open_vcf(path):
@@ -80,13 +80,13 @@ def sum_ins_del(vcf_path):
 
     return total_ins, total_del
 
-def count_bps_fn_fp(dirs):
+def count_bps_fn_fp(dirs, cohort):
 
     indel_len_list = []
 
     for d in dirs:
 
-        sample = "RUSH_"+Path(d).name.split("_")[1]
+        sample = f"{cohort}_"+Path(d).name.split("_")[1]
 
         
 
@@ -127,13 +127,17 @@ def count_bps_fn_fp(dirs):
 
     df = pd.DataFrame(indel_len_list)
 
-    plot_total_bp(df)
+    plot_total_bp(df, cohort)
 
 
 
 def plot_data(df):
     """ FN: hifiasm only
         FP: shasta only. 
+        Hifiasm is base, so FN: hifiasm only and FP: shasta only.
+        Precision is # of Shasta Common SVs / hifiasm SVS 
+        Recall is # of Shasta Common SVs / Shasta SVs 
+
 
         Scatter plots:
       Panel 1: TP-base vs TP-comp
@@ -157,9 +161,9 @@ def plot_data(df):
         s=60,
         edgecolor="k"
     )
-    axs[0].set_title("TP-base vs TP-comp")
-    axs[0].set_xlabel("TP-base")
-    axs[0].set_ylabel("TP-comp")
+    axs[0].set_title("Hifiasm vs Shasta")
+    axs[0].set_xlabel("Hifiasm")
+    axs[0].set_ylabel("Shasta")
 
     # label points
     for _, r in df.iterrows():
@@ -176,7 +180,7 @@ def plot_data(df):
         s=60,
         edgecolor="k"
     )
-    axs[1].set_title("FP vs FN")
+    axs[1].set_title("Shasta only vs Hifiasm only")
     axs[1].set_xlabel("Shasta only SVs")
     axs[1].set_ylabel("Hifiasm only SVs")
 
@@ -195,19 +199,19 @@ def plot_data(df):
         edgecolor="k"
     )
     axs[2].set_title("Precision vs Recall")
-    axs[2].set_xlabel("precision")
-    axs[2].set_ylabel("recall")
+    axs[2].set_xlabel("precision: # of Shasta Common SVs / hifiasm SVS")
+    axs[2].set_ylabel("recall: # of Shasta Common SVs / Shasta SVs")
 
     for _, r in df.iterrows():
         axs[2].text(r["precision"], r["recall"], r["sample"], fontsize=9)
 
     plt.tight_layout()
-    plt.savefig(f"RUSH_truvariBench_summary.png",dpi=300, facecolor='white', transparent=False)
+    plt.savefig(f"{cohort}_truvariBench_summary.png",dpi=300, facecolor='white', transparent=False)
 
 
 
 
-def load_jsons(dirs):
+def load_jsons(dirs, cohort):
 
 
     metrics_list = []
@@ -245,7 +249,7 @@ def load_jsons(dirs):
     df_metrics = pd.DataFrame(metrics_list)
 
     print(df_metrics.head())
-    df_metrics.to_csv("RUSH_HifiasmShasta_truvariBench_summary.csv", index=False, header=True)
+    df_metrics.to_csv(f"{cohort}_HifiasmShasta_truvariBench_summary.csv", index=False, header=True)
 
     plot_data(df_metrics)
 
@@ -262,11 +266,18 @@ if __name__ == "__main__":
         help="List of directories containing summary.json files"
     )
 
+    parser.add_argument(
+        "-c","--cohort",
+        type=str,
+        required=True,
+        help="Name of cohort for naming output files."
+    )
+
     args = parser.parse_args()
 
-    load_jsons(args.dirs)
+    load_jsons(args.dirs, args.cohort)
 
 
-    count_bps_fn_fp(args.dirs)
+    count_bps_fn_fp(args.dirs, args.cohort)
 
 
