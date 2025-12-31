@@ -251,7 +251,7 @@ def load_jsons(dirs, cohort):
     print(df_metrics.head())
     df_metrics.to_csv(f"{cohort}_HifiasmShasta_truvariBench_summary.csv", index=False, header=True)
 
-    plot_data(df_metrics)
+    plot_data(df_metrics, cohort)
 
 
 if __name__ == "__main__":
