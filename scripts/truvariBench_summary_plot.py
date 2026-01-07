@@ -135,8 +135,8 @@ def plot_data(df, cohort):
     """ FN: hifiasm only
         FP: shasta only. 
         Hifiasm is base, so FN: hifiasm only and FP: shasta only.
-        Precision is # of Shasta Common SVs / hifiasm SVS 
-        Recall is # of Shasta Common SVs / Shasta SVs 
+        Precision is # of Common SVs / Common + Shasta Only SVS 
+        Recall is # of Common SVs / Common + Hifiasm Only SVs 
 
 
         Scatter plots:
@@ -199,8 +199,8 @@ def plot_data(df, cohort):
         edgecolor="k"
     )
     axs[2].set_title("Precision vs Recall")
-    axs[2].set_xlabel("precision: # of Shasta Common SVs / hifiasm SVS")
-    axs[2].set_ylabel("recall: # of Shasta Common SVs / Shasta SVs")
+    axs[2].set_xlabel("precision: # of Common SVs / Common + Shasta Only SVS")
+    axs[2].set_ylabel("recall: # of Common SVs / Common + Hifiasm Only SVs")
 
     for _, r in df.iterrows():
         axs[2].text(r["precision"], r["recall"], r["sample"], fontsize=9)
