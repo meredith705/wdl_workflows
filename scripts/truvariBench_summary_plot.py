@@ -241,7 +241,7 @@ def load_jsons(dirs, cohort):
         metrics["f1"] = data.get("f1", 0)
 
         # Store sample/assembler info
-        metrics["sample"] = "RUSH_"+Path(d).name.split("_")[1]
+        metrics["sample"] = cohort+"_"+Path(d).name.split("_")[1]
 
         metrics_list.append(metrics)
 
