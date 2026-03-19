@@ -20,7 +20,7 @@ workflow CountReads {
   input {
     File   bam_file
     File  bam_index          
-    String samtools_docker = "quay.io/biocontainers/samtools:1.19.2--h50ea8bc_1"
+    String samtools_docker = "biocontainers/samtools:v1.9-4-deb_cv1"
     Int    cpu                = 2
     Int    memory_gb          = 4
     Int    disk_gb            = 50
@@ -62,7 +62,7 @@ task FlagstatAndCount {
   # Localise the index next to the BAM when supplied
   String bam_basename = basename(bam_file)
 
-  command <
+  command <<<
     set -euo pipefail
 
     BAM="~{bam_file}"
@@ -70,12 +70,11 @@ task FlagstatAndCount {
 
     # Symlink the index beside the BAM so samtools can find it
     INDEX="~{select_first([bam_index, ''])}"
-    ln -sf "$INDEX" "${BAM}.bai" 2>/dev/null \
-      || ln -sf "$INDEX" "$(dirname $BAM)/~{bam_basename}.bai"
+    ln -sf "~{bam_index}" "${BAM}.bai" 
 
 
     # samtools flagstat 
-    samtools flagstat -@ ~{cpu} "$BAM" > flagstat.txt
+    samtools flagstat -@~{cpu} "$BAM" > flagstat.txt
     echo "=== flagstat output ===" >&2
     cat flagstat.txt >&2
 
@@ -106,7 +105,7 @@ task FlagstatAndCount {
 
   runtime {
     docker:  docker
-    cpu:     cpu
+    cpu:     "~{cpu}"
     memory:  "~{memory_gb} GB"
     disks:   "local-disk ~{disk_gb} HDD"
     preemptible: 2
