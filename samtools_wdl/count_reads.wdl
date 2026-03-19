@@ -53,7 +53,7 @@ task FlagstatAndCount {
     Int    cpu       = 16
     Int    memory_gb = 96
     Int    disk_gb   = round(size(bam_file, 'G')) + 30
-    int preemptible  = 0
+    Int preemptible  = 0
   }
 
   # Localise the index next to the BAM when supplied
@@ -97,6 +97,6 @@ task FlagstatAndCount {
     cpu:     "~{cpu}"
     memory:  "~{memory_gb} GB"
     disks:   "local-disk ~{disk_gb} HDD"
-    preemptible: ~{preemptible}
+    preemptible: "~{preemptible}"
   }
 }
