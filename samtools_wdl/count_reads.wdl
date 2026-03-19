@@ -53,6 +53,7 @@ task FlagstatAndCount {
     Int    cpu       = 16
     Int    memory_gb = 96
     Int    disk_gb   = round(size(bam_file, 'G')) + 30
+    int preemptible  = 0
   }
 
   # Localise the index next to the BAM when supplied
@@ -61,16 +62,8 @@ task FlagstatAndCount {
   command <<<
     set -euo pipefail
 
-    BAM="~{bam_file}"
-
-
-    # Symlink the index beside the BAM so samtools can find it
-    INDEX="~{select_first([bam_index, ''])}"
-    ln -sf "~{bam_index}" "${BAM}.bai" 
-
-
     # samtools flagstat 
-    samtools flagstat -@~{cpu} "$BAM" > flagstat.txt
+    samtools flagstat -@~{cpu} ~{bam_file} > flagstat.txt
     echo "=== flagstat output ===" >&2
     cat flagstat.txt >&2
 
@@ -82,7 +75,7 @@ task FlagstatAndCount {
               | awk '{print $1 + $3}')
 
     # Count unmapped reads via samtools view -c -f 4 
-    UNMAPPED=$(samtools view -@ ~{cpu} -c -f 4 "$BAM")
+    UNMAPPED=$(samtools view -@ ~{cpu} -c -f 4 ~{bam_file})
 
     echo "$TOTAL"    > total_reads.txt
     echo "$PRIMARY"  > primary_reads.txt
@@ -104,6 +97,6 @@ task FlagstatAndCount {
     cpu:     "~{cpu}"
     memory:  "~{memory_gb} GB"
     disks:   "local-disk ~{disk_gb} HDD"
-    preemptible: 2
+    preemptible: ~{preemptible}
   }
 }
