@@ -38,6 +38,7 @@ workflow CountReads {
 
   output {
     Int  total_reads     = FlagstatAndCount.total_reads
+    Int  primary_reads   = FlagstatAndCount.primary_reads
     Int  unmapped_reads  = FlagstatAndCount.unmapped_reads
     File flagstat_report = FlagstatAndCount.flagstat_report
   }
