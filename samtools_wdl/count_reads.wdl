@@ -19,11 +19,8 @@ workflow CountReads {
 
   input {
     File   bam_file
-    File  bam_index          
+    File   bam_index          
     String samtools_docker = "biocontainers/samtools:v1.9-4-deb_cv1"
-    Int    cpu                = 2
-    Int    memory_gb          = 4
-    Int    disk_gb            = 50
   }
 
   call FlagstatAndCount {
@@ -31,9 +28,7 @@ workflow CountReads {
       bam_file       = bam_file,
       bam_index      = bam_index,
       docker         = samtools_docker,
-      cpu            = cpu,
-      memory_gb      = memory_gb,
-      disk_gb        = disk_gb
+
   }
 
   output {
@@ -53,11 +48,11 @@ task FlagstatAndCount {
 
   input {
     File   bam_file
-    File  bam_index
+    File   bam_index
     String docker
-    Int    cpu
-    Int    memory_gb
-    Int    disk_gb
+    Int    cpu       = 16
+    Int    memory_gb = 96
+    Int    disk_gb   = round(size(bam_file, 'G')) + 30
   }
 
   # Localise the index next to the BAM when supplied
