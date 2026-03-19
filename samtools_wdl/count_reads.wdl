@@ -19,7 +19,7 @@ workflow CountReads {
 
   input {
     File   bam_file
-    File?  bam_index          # Optional — task will auto-index if not supplied
+    File  bam_index          
     String samtools_docker = "quay.io/biocontainers/samtools:1.19.2--h50ea8bc_1"
     Int    cpu                = 2
     Int    memory_gb          = 4
@@ -52,7 +52,7 @@ task FlagstatAndCount {
 
   input {
     File   bam_file
-    File?  bam_index
+    File  bam_index
     String docker
     Int    cpu
     Int    memory_gb
@@ -67,16 +67,12 @@ task FlagstatAndCount {
 
     BAM="~{bam_file}"
 
-    # Index the BAM if no index was provided 
-    if [ -z "~{default='' bam_index}" ]; then
-      echo "No index supplied — creating one..." >&2
-      samtools index -@ ~{cpu} "$BAM"
-    else
-      # Symlink the index beside the BAM so samtools can find it
-      INDEX="~{select_first([bam_index, ''])}"
-      ln -sf "$INDEX" "${BAM}.bai" 2>/dev/null \
-        || ln -sf "$INDEX" "$(dirname $BAM)/~{bam_basename}.bai"
-    fi
+
+    # Symlink the index beside the BAM so samtools can find it
+    INDEX="~{select_first([bam_index, ''])}"
+    ln -sf "$INDEX" "${BAM}.bai" 2>/dev/null \
+      || ln -sf "$INDEX" "$(dirname $BAM)/~{bam_basename}.bai"
+
 
     # samtools flagstat 
     samtools flagstat -@ ~{cpu} "$BAM" > flagstat.txt
