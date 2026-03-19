@@ -14,5 +14,8 @@ workflows:
   - name: quastOutput
     subclass: WDL
     primaryDescriptorPath: /shasta_eval/quast_output.wdl
+  - name: countReads
+    subclass: WDL
+    primaryDescriptorPath: /samtools_wdl/countReads.wdl
 
 
