@@ -56,8 +56,6 @@ task FlagstatAndCount {
   command <<<
     set -euo pipefail
 
-    samtools --version
-
     # samtools flagstat 
     samtools flagstat -@~{cpu} ~{bam_file} > flagstat.txt
     echo "=== flagstat output ===" >&2
