@@ -14,7 +14,7 @@ workflow CountReads {
   input {
     File   bam_file
     File   bam_index          
-    String samtools_docker = "biocontainers/samtools:v1.9-4-deb_cv1"
+    String samtools_docker = "meredith705/card_sniffles:2.7.2"
   }
 
   call FlagstatAndCount {
@@ -56,6 +56,8 @@ task FlagstatAndCount {
   command <<<
     set -euo pipefail
 
+    samtools --version
+
     # samtools flagstat 
     samtools flagstat -@~{cpu} ~{bam_file} > flagstat.txt
     echo "=== flagstat output ===" >&2
@@ -63,11 +65,15 @@ task FlagstatAndCount {
 
     # Parse total reads from flagstat output
     # "<N> + <N> in total (QC-passed reads + QC-failed reads)"
+    echo "parse reads from flagstat output"
     TOTAL=$(grep -m1 "in total" flagstat.txt | awk '{print $1 + $3}')
+    echo "Total ${TOTAL}"
     PRIMARY=$(grep -m1 "primary" flagstat.txt | awk '{print $1 + $3}')
+    echo "Total ${PRIMARY}"
 
     # Count unmapped reads via samtools view -c -f 4 
     UNMAPPED=$(samtools view -@~{cpu} -c -f 4 ~{bam_file})
+    echo "Total ${UNMAPPED}"
 
     echo "$TOTAL"    > total_reads.txt
     echo "$PRIMARY"  > primary_reads.txt
