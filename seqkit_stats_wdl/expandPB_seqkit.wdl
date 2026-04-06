@@ -43,8 +43,10 @@ task expand {
   String tar_basename = sub(basename(tar_file), "\\_cell1.tar", "")
 
   command <<<
-    set -euo pipefall 
-    set -o xtrace 
+    set -o pipefail
+    set -e
+    set -u
+    set -o xtrace
 
     # expand the tar
     tar -xvf tar_file
