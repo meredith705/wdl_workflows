@@ -36,7 +36,7 @@ task expand {
     String docker
     Int cpu = 2
     Int memory_gb = 96
-    Int disk_gb = 150
+    Int disk_gb = 500
     Int preemptible = 1
   }
 
