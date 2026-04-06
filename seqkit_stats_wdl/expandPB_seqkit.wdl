@@ -49,7 +49,7 @@ task expand {
     set -o xtrace
 
     # expand the tar
-    tar -xvf tar_file
+    tar -xvf ~{tar_file}
 
     ls
 
