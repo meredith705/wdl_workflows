@@ -102,8 +102,8 @@ task seqkitStats {
 
     runtime {
         docker: "~{dockerImage}"
-        memory: "~{memSizeGB} + " GB"
-        cpu: "~{threadCount}
+        memory: "~{memSizeGB} GB"
+        cpu: "~{threadCount}"
         disks:   "local-disk ~{disk_gb} SSD"
     }
 
