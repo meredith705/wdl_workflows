@@ -80,7 +80,7 @@ task seqkitStats {
       # runtime configurations
       Int memSizeGB = 128
       Int threadCount = 10
-      Int diskSizeGB = 96
+      Int    disk_gb   = round(size(fastq, 'G')) + 30
       String dockerImage = "meredith705/seqkitstats:latest"
     }
 
@@ -101,9 +101,10 @@ task seqkitStats {
     >>>
 
     runtime {
-        docker: dockerImage
-        memory: memSizeGB + " GB"
-        cpu: threadCount
+        docker: "~{dockerImage}""
+        memory: "~{memSizeGB} + " GB"
+        cpu: "~{threadCount}
+        disks:   "local-disk ~{disk_gb} SSD"
     }
 
     output {
