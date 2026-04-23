@@ -8,7 +8,7 @@ workflow DeduplicateReadNames {
     input {
         File input_bam
         String sample_name
-        String docker_image = "quay.io/biocontainers/samtools:1.18--h57cf14b_1"
+        String docker_image = "meredith705/card_sniffles:2.7.2"
     }
 
     call DeduplicateReadNamesTask {
