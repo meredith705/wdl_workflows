@@ -3,35 +3,18 @@ version 1.0
 workflow ExtractRegionFromGVCFs {
     input {
         Array[File] gvcf_files
-        Array[File?] gvcf_indices
         String region                  # ex: "chr15:34426000-34427000"
         String output_prefix           
     }
 
-    Array[File] indices_provided = select_first([gvcf_indices, []])
-    Boolean     has_indices      = length(indices_provided) > 0
 
     # Extract region from each gVCF individually
     scatter (i in range(length(gvcf_files))) {
 
-        # Index if not provided
-        if (!has_indices) {
-            call IndexGVCF {
-                input:
-                    gvcf = gvcf_files[i],
-            }
-        }
-
-        File resolved_index = select_first([
-            indices_provided[i],
-            IndexGVCF.gvcf_index[i]
-        ])
-
         call ExtractRegion {
             input:
                 gvcf       = gvcf_files[i],
-                gvcf_index = resolved_index,
-                region     = region,
+                region     = region
         }
     }
 
@@ -51,40 +34,10 @@ workflow ExtractRegionFromGVCFs {
     }
 }
 
-task IndexGVCF {
-    input {
-        File   gvcf
-        Int    disk_gb   = 50
-        Int    memory_gb = 4
-        Int    cpu       = 1
-        String docker    = "biocontainers/bcftools:v1.9-1-deb_cv1"
-    }
-
-    String gvcf_name = basename(gvcf)
-
-    command <<<
-        set -euo pipefail
-
-        bcftools index -t ~{gvcf}
-    >>>
-
-    output {
-        File gvcf_index = "~{gvcf_name}.tbi"
-    }
-
-    runtime {
-        docker:   docker
-        cpu:      cpu
-        memory:   "~{memory_gb} GB"
-        disks:       "local-disk " + disk_gb + " SSD"
-    }
-}
-
 
 task ExtractRegion {
     input {
         File   gvcf
-        File   gvcf_index
         String region
 
         Int    disk_gb   = 50
@@ -97,6 +50,8 @@ task ExtractRegion {
 
     command <<<
         set -euo pipefail
+
+        bcftools index -t ~{gvcf}
 
         bcftools view \
             -r ~{region} \
