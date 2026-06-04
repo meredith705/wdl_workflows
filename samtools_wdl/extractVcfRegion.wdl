@@ -52,7 +52,7 @@ task ExtractRegion {
 
     String sample_name = basename(gvcf, ".g.vcf.gz")
 
-    command <
+    command <<<
         set -euo pipefail
 
         bcftools view \
@@ -92,7 +92,7 @@ task MergeAndCount {
         String docker    = "meredith705/truvari"
     }
 
-    command <
+    command <<<
         set -euo pipefail
 
         # Write VCF list to file
