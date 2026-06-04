@@ -3,20 +3,35 @@ version 1.0
 workflow ExtractRegionFromGVCFs {
     input {
         Array[File] gvcf_files
-        Array[File] gvcf_indices
+        Array[File?] gvcf_indices
         String region                  # ex: "chr15:34426000-34427000"
         String output_prefix           
-        File reference_fasta
-        File reference_fasta_fai
     }
+
+    Array[File] indices_provided = select_first([gvcf_indices, []])
+    Boolean     has_indices      = length(indices_provided) > 0
 
     # Extract region from each gVCF individually
     scatter (i in range(length(gvcf_files))) {
+
+        # Index if not provided
+        if (!has_indices) {
+            call IndexGVCF {
+                input:
+                    gvcf = gvcf_files[i],
+            }
+        }
+
+        File resolved_index = select_first([
+            indices_provided[i],
+            IndexGVCF.gvcf_index[i]
+        ])
+
         call ExtractRegion {
             input:
-                gvcf        = gvcf_files[i],
-                gvcf_index  = gvcf_indices[i],
-                region      = region,
+                gvcf       = gvcf_files[i],
+                gvcf_index = resolved_index,
+                region     = region,
         }
     }
 
@@ -26,9 +41,7 @@ workflow ExtractRegionFromGVCFs {
             vcf_files     = ExtractRegion.region_vcf,
             vcf_indices   = ExtractRegion.region_vcf_index,
             output_prefix = output_prefix,
-            region        = region,
-            reference_fasta     = reference_fasta,
-            reference_fasta_fai = reference_fasta_fai,
+            region        = region
     }
 
     output {
@@ -37,6 +50,36 @@ workflow ExtractRegionFromGVCFs {
         File variant_counts   = MergeAndCount.variant_counts
     }
 }
+
+task IndexGVCF {
+    input {
+        File   gvcf
+        Int    disk_gb   = 50
+        Int    memory_gb = 4
+        Int    cpu       = 1
+        String docker    = "biocontainers/bcftools:v1.9-1-deb_cv1"
+    }
+
+    String gvcf_name = basename(gvcf)
+
+    command <<<
+        set -euo pipefail
+
+        bcftools index -t ~{gvcf}
+    >>>
+
+    output {
+        File gvcf_index = "~{gvcf_name}.tbi"
+    }
+
+    runtime {
+        docker:   docker
+        cpu:      cpu
+        memory:   "~{memory_gb} GB"
+        disks:       "local-disk " + disk_gb + " SSD"
+    }
+}
+
 
 task ExtractRegion {
     input {
@@ -73,7 +116,7 @@ task ExtractRegion {
         docker:   docker
         cpu:      cpu
         memory:   "~{memory_gb} GB"
-        disks:    "local-disk ~{disk_gb} HDD"
+        disks:    "local-disk ~{disk_gb} SSD"
     }
 }
 
@@ -83,8 +126,6 @@ task MergeAndCount {
         Array[File] vcf_indices
         String      output_prefix
         String      region
-        File        reference_fasta
-        File        reference_fasta_fai
 
         Int    disk_gb   = 100
         Int    memory_gb = 8
@@ -151,6 +192,6 @@ task MergeAndCount {
         docker:   docker
         cpu:      cpu
         memory:   "~{memory_gb} GB"
-        disks:    "local-disk ~{disk_gb} HDD"
+        disks:    "local-disk ~{disk_gb} SSD"
     }
 }
