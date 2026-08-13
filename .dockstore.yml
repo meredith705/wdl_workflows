@@ -20,5 +20,11 @@ workflows:
   - name: countReads
     subclass: WDL
     primaryDescriptorPath: /samtools_wdl/count_reads.wdl
+  - name: deduplicateReads
+    subclass: WDL
+    primaryDescriptorPath: /samtools_wdl/deduplicate_read_names.wdl
+  - name: extractVcfRegion
+    subclass: WDL
+    primaryDescriptorPath: /samtools_wdl/extractVcfRegion.wdl
 
 
