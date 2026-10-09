@@ -18,8 +18,10 @@ import datetime
 	02/2025
 """
 
-labelsize=24
-ticksize=20
+labelsize=14
+ticksize=24
+
+sns.set(style="whitegrid")
 
 sns.set(
     rc={
@@ -103,7 +105,7 @@ def vcfEntriesPerSample(in_vcf):
 
 	# write out the variant counts to a tsv file, including the header column names, but not the index
 	sample_variant_count_df = pd.DataFrame( list(variant_counts.items()), columns=['Sample', 'VariantCount'])
-
+	sample_variant_count_df = sample_variant_count_df.sort_values('VariantCount').reset_index(drop=True)
 	
 	sample_variant_count_df.to_csv(vcf_prefix+"_sample_variant_counts.tsv", header=True, index=False, sep="\t")
 
@@ -122,30 +124,72 @@ def violin_swarm(x,y,data,ax,swarm_pt_size = 3):
 	    y=y,
 	    jitter=True,   # random jitter
 	    size=2, ax=ax, color='black'
-)
+	)
+
+def violin_swarm_cohort(x,y,data,ax,swarm_pt_size = 3):
+	""" make a violin plot with a swarm of datapoints on top """
+
+	cohort_colors = {"PPMI" : '#2ca02c',
+					 "RUSH" : '#d62728',
+					 "HBCC" : '#ff7f0e',
+					 "NABEC" : '#1f77b4'
+					}
+	sns.violinplot(x=x, y=y, data=data, cut=0.25, inner="quartile", alpha = 0.05, ax=ax, edgecolor='black')
+	# sns.swarmplot(x=x, y=y, data=data, s=swarm_pt_size, alpha=1, ax=ax, color='black')
+	sns.stripplot(
+		data=data,
+		x=x,
+		y=y,
+		hue=x,
+		jitter=True,
+		size=2,
+		ax=ax,
+		palette=cohort_colors,
+		legend=False
+	)
 
 
-def plot_violin_perSample(vcf_data, vcf_prefix):
+def plot_violin_perSample(vcf_data, vcf_prefix, plot_title):
 	""" set up the figure to plot a violin """
 	print('Plotting sample count violin')
-	fig, axs = plt.subplots(figsize=(8,4))
+	fig, axs = plt.subplots(figsize=(8,8))
+
 
 	violin_swarm(['samples']*vcf_data.shape[0], 'VariantCount', vcf_data, axs)
 
 	plt.xticks(fontsize=ticksize)
 	plt.yticks(fontsize=ticksize)
-	axs.set_xlabel('sample',fontsize=labelsize)
+	# axs.set_xlabel('sample',fontsize=labelsize)
 	axs.set_ylabel('variantCount',fontsize=labelsize)
+	fig.suptitle(f"SV Count Per Sample {plot_title}", fontsize=labelsize)
 
 	plt.tight_layout()
 	plt.savefig(vcf_prefix+"_sample_variant_counts.png", dpi=300)
+	plt.close(fig)
+
+def plot_violin_perSample_perCohort(vcf_data, vcf_prefix, plot_title):
+	""" set up the figure to plot a violin """
+	print('Plotting sample count violin')
+	fig, axs = plt.subplots(figsize=(6,8))
+
+	vcf_data['cohort'] = vcf_data['Sample'].str.split('_').str[0]
+
+	violin_swarm_cohort('cohort', 'VariantCount', vcf_data, axs)
+
+	plt.xticks(fontsize=12, rotation=45)
+	plt.yticks(fontsize=14)
+	# axs.set_xlabel('sample',fontsize=labelsize)
+	axs.set_ylabel('variantCount',fontsize=labelsize)
+	fig.suptitle(f"SV Count Per Sample By Cohort {plot_title}", fontsize=labelsize)
+
+	plt.tight_layout()
+	plt.savefig(vcf_prefix+"_cohort_sample_variant_counts.png", dpi=300)
+	plt.close(fig)
 
 
-def plot_violin_variantType(svTypes, vcf_prefix):
+def plot_violin_variantType(svTypes, vcf_prefix, plot_title):
 	""" Plot variant type violin of variant lengths """
 	print('Plotting variant type violin')
-
-
 
 	# convert dictionary to long-form DF
 	lfdata = []
@@ -158,21 +202,33 @@ def plot_violin_variantType(svTypes, vcf_prefix):
 				lfdata.append({'SVTYPE':svtype, 'SVLEN':vals['lengths']})
 	
 	lfdf = pd.DataFrame(lfdata)
+	lfdf = lfdf.sort_values('SVLEN').reset_index(drop=True)
+
+	lfdf_10kmax = lfdf.loc[(lfdf['SVLEN']>=-10000) & (lfdf['SVLEN']<=10000)]
+	lfdf_large = lfdf.loc[(lfdf['SVLEN']<-10000) | (lfdf['SVLEN']>10000)]
 
 	lfdf.to_csv(vcf_prefix+"_variantType_counts.tsv", header=True, index=False, sep="\t")
 
-	fig, axs = plt.subplots(figsize=(18,16))
 
-	violin_swarm('SVTYPE', 'SVLEN', lfdf, axs)
+	fig, axs = plt.subplots(1,2, figsize=(18,16))
 
+	violin_swarm('SVTYPE', 'SVLEN', lfdf_10kmax, axs[0])
+	violin_swarm('SVTYPE', 'SVLEN', lfdf_large, axs[1])
 
-	plt.title("SV Length Distributino per SV Type",fontsize=labelsize)
-	plt.xlabel("SVTYPE",fontsize=labelsize)
-	plt.ylabel("SVLEN",fontsize=labelsize)
-	plt.xticks(fontsize=ticksize)
-	plt.yticks(fontsize=ticksize)
+	for ax, subtitle in zip(axs, ["|SVLEN| \u2264 10kb", "|SVLEN| > 10kb"]):
+		ax.set_title(subtitle, fontsize=labelsize)
+		ax.set_xlabel("SVTYPE", fontsize=labelsize)
+		ax.set_ylabel("SVLEN", fontsize=labelsize)
+		ax.tick_params(axis='x', labelsize=ticksize)
+		ax.tick_params(axis='y', labelsize=ticksize)
+
+	fig.suptitle(f"SV Length Distribution per SV Type {plot_title}", fontsize=labelsize)
+
 	plt.savefig(vcf_prefix+"_variant_counts_lengths.png", dpi=300)
+	plt.close(fig)
 
+# def plot_histogram_varLength( svLengths, vcf_prefix):
+# 	""" plot histogram and then a scatter of variant length """
 
 
 
@@ -188,6 +244,12 @@ if __name__ == "__main__":
 		type=str,
 		required=True,
 		help="Path to the input vcf file to be analyzed. Can be bgzipped, having an index would increase processing speed."
+	)
+
+	parser.add_argument(
+		"-m","--main_title",
+		type=str,
+		help="Title prefix for plots."
 	)
 
 	# add arugment for making a plot of sample variant counts 
@@ -210,6 +272,8 @@ if __name__ == "__main__":
 		help='write out variants types for a single sample'
 	)
 
+
+
 	if len(sys.argv) == 0:
 		parser.print_help(sys.stderr)
 		sys.exit(1)
@@ -222,13 +286,16 @@ if __name__ == "__main__":
 
 	#vcf prefix
 	vcf_prefix = args.in_vcf_file.split(".")[0]
+	plot_title = args.main_title
 
 	if args.plot_violin_perSample:
-		plot_violin_perSample(sample_variant_count_df, vcf_prefix)
+		plot_violin_perSample(sample_variant_count_df, vcf_prefix, plot_title)
+
+		plot_violin_perSample_perCohort(sample_variant_count_df, vcf_prefix, plot_title)
 
 	if args.plot_violin_variantType:
 
-		plot_violin_variantType(svTypes,vcf_prefix)	
+		plot_violin_variantType(svTypes,vcf_prefix, plot_title)	
 
 	if args.writeOutvariantTypes:
 		svTypesDf = pd.DataFrame( [ (k,v['count']) for k,v in svTypes.items() ], columns=['type','count'] )

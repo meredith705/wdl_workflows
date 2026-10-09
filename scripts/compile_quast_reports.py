@@ -67,7 +67,8 @@ def main(report_dir, output_file):
             sample_name = "_".join(file_parts[:-1])
             file_name = file_parts[-1]
             # check the filename and store metrics in dictionary by sample name
-            if file_name == "report.txt":
+            # if file_name == "report.txt":
+            if file_name.endswith("report.txt"):
                 report_path = os.path.join(root, fname)
                 print('report_path', report_path, fname, sample_name)
                 metrics = parse_quast_report(report_path)
