@@ -129,10 +129,15 @@ def violin_swarm(x,y,data,ax,swarm_pt_size = 3):
 def violin_swarm_cohort(x,y,data,ax,swarm_pt_size = 3):
 	""" make a violin plot with a swarm of datapoints on top """
 
-	cohort_colors = {"PPMI" : '#2ca02c',
-					 "RUSH" : '#d62728',
-					 "HBCC" : '#ff7f0e',
-					 "NABEC" : '#1f77b4'
+	# cohort_colors = {"PPMI" : '#2ca02c',
+	# 				 "RUSH" : '#d62728',
+	# 				 "HBCC" : '#ff7f0e',
+	# 				 "NABEC" : '#1f77b4'
+	# 				}
+	cohort_colors = {"PPMI" : '#d62728',        # red
+					 "RUSH" : '#2ca02c',    # green
+					 "HBCC" : '#ff7f0e',    # orange
+					 "NABEC" : '#1f77b4'    # blue
 					}
 	sns.violinplot(x=x, y=y, data=data, cut=0.25, inner="quartile", alpha = 0.05, ax=ax, edgecolor='black')
 	# sns.swarmplot(x=x, y=y, data=data, s=swarm_pt_size, alpha=1, ax=ax, color='black')
@@ -142,7 +147,7 @@ def violin_swarm_cohort(x,y,data,ax,swarm_pt_size = 3):
 		y=y,
 		hue=x,
 		jitter=True,
-		size=2,
+		size=4,
 		ax=ax,
 		palette=cohort_colors,
 		legend=False
@@ -248,7 +253,7 @@ if __name__ == "__main__":
 
 	parser.add_argument(
 		"-m","--main_title",
-		type=str,
+		type=str, default="",
 		help="Title prefix for plots."
 	)
 
