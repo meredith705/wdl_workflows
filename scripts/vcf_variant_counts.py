@@ -48,6 +48,8 @@ def vcfEntriesPerSample(in_vcf):
 	vcf_file = pysam.VariantFile(in_vcf) 
 
 	# set up a dictionary to track the number of variant allels per sample 
+	allele_counts = {sample:0 for sample in vcf_file.header.samples}
+	# set up a dictionary to track the number of variant counts per sample 
 	variant_counts = {sample:0 for sample in vcf_file.header.samples}
 	# make a dictionary of SV types in the vcf
 	svTypes = {}
@@ -91,9 +93,18 @@ def vcfEntriesPerSample(in_vcf):
 				# print(record.info['SVTYPE'], 'sample', sample, data["GT"])
 				for allele in data["GT"]:
 					# count alleles that are not '.' nor 0
+					# this counts one for each allele not per SV
 					if allele is not None and allele > 0:
 						# increment the variant count for the sample 
-						variant_counts[sample] += 1
+						allele_counts[sample] += 1
+
+			# variant count per sample
+			gt = data.get('GT')
+			if gt is None:
+				continue
+			# count the SV once if the sample carries at least one non-ref allele
+			if any(a is not None and a > 0 for a in gt):
+				variant_counts[sample] += 1
 
 	vcf_file.close()
 
@@ -103,6 +114,12 @@ def vcfEntriesPerSample(in_vcf):
 	for key, val in svTypes.items():
 		print(key,val['count'])
 
+	# write out the allele counts to a tsv file, including the header column names, but not the index
+	sample_allele_count_df = pd.DataFrame( list(allele_counts.items()), columns=['Sample', 'alleleCount'])
+	sample_allele_count_df = sample_allele_count_df.sort_values('alleleCount').reset_index(drop=True)
+	
+	sample_allele_count_df.to_csv(vcf_prefix+"_sample_allele_counts.tsv", header=True, index=False, sep="\t")
+
 	# write out the variant counts to a tsv file, including the header column names, but not the index
 	sample_variant_count_df = pd.DataFrame( list(variant_counts.items()), columns=['Sample', 'VariantCount'])
 	sample_variant_count_df = sample_variant_count_df.sort_values('VariantCount').reset_index(drop=True)
@@ -110,8 +127,8 @@ def vcfEntriesPerSample(in_vcf):
 	sample_variant_count_df.to_csv(vcf_prefix+"_sample_variant_counts.tsv", header=True, index=False, sep="\t")
 
 
-	# return the variant count dataframe to main
-	return sample_variant_count_df, svTypes
+	# return the variant count dataframes to main
+	return sample_variant_count_df, svTypes, sample_allele_count_df 
 
 def violin_swarm(x,y,data,ax,swarm_pt_size = 3):
 	""" make a violin plot with a swarm of datapoints on top """
@@ -159,8 +176,10 @@ def plot_violin_perSample(vcf_data, vcf_prefix, plot_title):
 	print('Plotting sample count violin')
 	fig, axs = plt.subplots(figsize=(8,8))
 
+	vcf_data['cohort'] = vcf_data['Sample'].str.split('_').str[0]
 
-	violin_swarm(['samples']*vcf_data.shape[0], 'VariantCount', vcf_data, axs)
+
+	violin_swarm_cohort('cohort', 'VariantCount', vcf_data, axs)
 
 	plt.xticks(fontsize=ticksize)
 	plt.yticks(fontsize=ticksize)
@@ -175,20 +194,41 @@ def plot_violin_perSample(vcf_data, vcf_prefix, plot_title):
 def plot_violin_perSample_perCohort(vcf_data, vcf_prefix, plot_title):
 	""" set up the figure to plot a violin """
 	print('Plotting sample count violin')
-	fig, axs = plt.subplots(figsize=(6,8))
+	fig, axs = plt.subplots(figsize=(8,10))
 
 	vcf_data['cohort'] = vcf_data['Sample'].str.split('_').str[0]
 
 	violin_swarm_cohort('cohort', 'VariantCount', vcf_data, axs)
 
-	plt.xticks(fontsize=12, rotation=45)
-	plt.yticks(fontsize=14)
+	plt.xticks(fontsize=18, rotation=45)
+	plt.yticks(fontsize=18)
 	# axs.set_xlabel('sample',fontsize=labelsize)
-	axs.set_ylabel('variantCount',fontsize=labelsize)
-	fig.suptitle(f"SV Count Per Sample By Cohort {plot_title}", fontsize=labelsize)
+	axs.set_ylabel('Variant Count',fontsize=24)
+	axs.set_xlabel('Cohort',fontsize=24)
+	fig.suptitle(f"SV Count By Cohort {plot_title}", fontsize=24)
 
 	plt.tight_layout()
-	plt.savefig(vcf_prefix+"_cohort_sample_variant_counts.png", dpi=300)
+	plt.savefig(vcf_prefix+"_cohort_sample_variant_counts_largerLabels.png", dpi=300)
+	plt.close(fig)
+
+def plot_allele_violin_perSample_perCohort(vcf_data, vcf_prefix, plot_title):
+	""" set up the figure to plot a violin """
+	print('Plotting sample count violin')
+	fig, axs = plt.subplots(figsize=(8,10))
+
+	vcf_data['cohort'] = vcf_data['Sample'].str.split('_').str[0]
+
+	violin_swarm_cohort('cohort', 'alleleCount', vcf_data, axs)
+
+	plt.xticks(fontsize=18, rotation=45)
+	plt.yticks(fontsize=18)
+	# axs.set_xlabel('sample',fontsize=labelsize)
+	axs.set_ylabel('Allele Count',fontsize=24)
+	axs.set_xlabel('Cohort',fontsize=24)
+	fig.suptitle(f"SV Allele Count By Cohort {plot_title}", fontsize=24)
+
+	plt.tight_layout()
+	plt.savefig(vcf_prefix+"_cohort_sample_variant_allele_counts_largerLabels.png", dpi=300)
 	plt.close(fig)
 
 
@@ -287,16 +327,23 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	# Process the VCF file
-	sample_variant_count_df, svTypes = vcfEntriesPerSample(args.in_vcf_file)
+	sample_variant_count_df, svTypes, sample_allele_count_df = vcfEntriesPerSample(args.in_vcf_file)
 
 	#vcf prefix
 	vcf_prefix = args.in_vcf_file.split(".")[0]
 	plot_title = args.main_title
 
+	# variant counts 
 	if args.plot_violin_perSample:
 		plot_violin_perSample(sample_variant_count_df, vcf_prefix, plot_title)
 
 		plot_violin_perSample_perCohort(sample_variant_count_df, vcf_prefix, plot_title)
+
+	# allele counts
+	if args.plot_violin_perSample:
+		# plot_violin_perSample(sample_allele_count_df, vcf_prefix, plot_title+"_alleleCounts")
+
+		plot_allele_violin_perSample_perCohort(sample_allele_count_df, vcf_prefix, plot_title)
 
 	if args.plot_violin_variantType:
 
